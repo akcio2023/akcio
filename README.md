@@ -1,7 +1,7 @@
 # Akcio: Enhancing LLM-Powered ChatBot with CVP Stack
 
 [OSSChat](https://osschat.io) |
-[Documentation](https://github.com/zilliztech/akcio/wiki) |
+[Documentation](https://github.com/akcio2023/akcio/wiki) |
 [Contact](https://zilliz.com/contact-sales) |
 [ToS](./ToS.md)
 
@@ -22,7 +22,7 @@ By the end, you will learn how to start a backend service using FastAPI, which p
 ## Overview
 
 The system is built on top of LangChain Agent using vector database for semantic search and memory storage for context support.
-You can find more details and instructions at our [documentation](https://github.com/zilliztech/akcio/wiki).
+You can find more details and instructions at our [documentation](https://github.com/akcio2023/akcio/wiki).
 
 <img src='pics/osschat.png' width='75%' alignment='centre'>
 
@@ -49,7 +49,7 @@ You can find more details and instructions at our [documentation](https://github
 
 1. Downloads
     ```shell
-    $ git clone https://github.com/zilliztech/akcio.git
+    $ git clone https://github.com/akcio2023/akcio.git
     $ cd akcio
     ```
 
