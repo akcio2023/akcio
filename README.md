@@ -162,5 +162,6 @@ This method is only recommended to load a small amount of data, but **not for a 
 ---
 
 ## Notice
-Akcio is a project developed by Zilliz. All rights reserved. 
+Akcio is a project developed by Zilliz, All rights reserved. 
+
 By using our project or any part of our project, you agree to the [Terms of Service](./ToS.md).
