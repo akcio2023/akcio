@@ -11,7 +11,7 @@ from ..config import vectordb_config
 logger = logging.getLogger('vector_store')
 
 CONNECTION_ARGS = vectordb_config.get('connection_args', {'host': 'localhost', 'port': 19530})
-TOP_K = vectordb_config.get('top_k', 10)
+TOP_K = vectordb_config.get('top_k', 3)
 INDEX_PARAMS = vectordb_config.get('index_params', None)
 SEARCH_PARAMS = vectordb_config.get('search_params', None)
 
