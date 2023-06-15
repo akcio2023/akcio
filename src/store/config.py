@@ -7,7 +7,7 @@ vectordb_config = {
     'connection_args': {
         'uri': os.getenv('MILVUS_URI', 'https://localhost:19530'),
         },
-        'top_k': 10,
+        'top_k': 3,
         'index_params': {
             'metric_type': 'IP',
             'index_type': 'IVF_FLAT',

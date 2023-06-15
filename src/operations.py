@@ -121,11 +121,11 @@ def load(document_strs: List[str], project: str):
 
 # if __name__ == '__main__':
 #     project = 'akcio'
-#     data_src = '../requirements.txt'
+#     data_src = 'https://docs.towhee.io/Triton%20Server/triton/'
 #     session_id = 'test000'
-#     question = 'What version is required for LangChain?'
+#     question = 'How to debug Towhee pipeline in triton?'
 
-#     count = insert(data_src=data_src, project=project)
+#     count = insert(data_src=data_src, project=project, source_type='url')
 #     print('Count:', count)
 #     print('Check:', check(project))
 
