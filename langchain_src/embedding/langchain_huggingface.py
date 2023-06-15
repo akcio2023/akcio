@@ -1,10 +1,14 @@
+import sys
+import os
 from typing import List
 import numpy
 
 from langchain.embeddings.base import Embeddings
 from langchain.embeddings import HuggingFaceEmbeddings
 
-from .config import textencoder_config
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import textencoder_config
 
 MODEL = textencoder_config.get('model', 'multi-qa-mpnet-base-cos-v1')
 NORM = textencoder_config.get('norm', False)

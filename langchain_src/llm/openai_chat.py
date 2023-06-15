@@ -1,8 +1,12 @@
+import os
+import sys
 from typing import Optional, Union, Tuple
 
 from langchain.chat_models import ChatOpenAI
 
-from .config import chatllm_configs
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import chatllm_configs
 
 
 class ChatLLM(ChatOpenAI):

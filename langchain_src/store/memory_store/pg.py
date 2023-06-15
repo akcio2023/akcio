@@ -1,8 +1,12 @@
+import os
+import sys
 from typing import List
 from langchain.schema import HumanMessage, AIMessage
 from langchain.memory import PostgresChatMessageHistory, ConversationBufferMemory
 
-from ..config import memorydb_config
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import memorydb_config
 
 
 CONNECT_STR = memorydb_config.get(

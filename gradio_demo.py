@@ -1,6 +1,6 @@
 import gradio
 
-from src.operations import chat, insert, get_history
+from langchain_src.operations import chat, insert, get_history
 
 def respond(session, project, msg):
     chat(session, project, msg)

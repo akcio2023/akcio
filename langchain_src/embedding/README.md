@@ -14,7 +14,7 @@ By default, it uses a modified `HuggingFaceEmbeddings` in LangChain.
 The modified HuggingFace encoder allows to return normalized embedding(s) by the parameter `norm`.
 To configure the default encoder, you change values of parameters via `config.py`.
 
-Modify [embedding configs](embedding/config.py) to configure it, like changing models or disable normalization:
+Modify [embedding configs](../../config.py) to configure it, like changing models or disable normalization:
 
 ```python
 # Text embedding
@@ -41,7 +41,7 @@ query_embedding = encoder.embed_query('test')
 
 To change embedding method used in operations, you can modify [__init__.py](./__init__.py) to import a different TextEncoder.
 For example, changing `.langchain_huggingface` to `.openai_embedding` in the init file will switch to OpenAI embedding.
-In the meantime, don't forget to modify [config.py](./config.py) for a changed embedding method.
+In the meantime, don't forget to modify [config.py](../../config.py) for a changed embedding method.
 The text encoder should inherit LangChain Embeddings and you can rewrite the methods `embed_documents` and `embed_query` to customize the module:
 
 ```python

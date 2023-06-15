@@ -1,3 +1,5 @@
+import os
+import sys
 import logging
 from typing import Optional, Any, Tuple, List, Dict
 
@@ -5,7 +7,9 @@ from langchain.vectorstores import Milvus
 from langchain.embeddings.base import Embeddings
 from langchain.docstore.document import Document
 
-from ..config import vectordb_config
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
+
+from config import vectordb_config
 
 
 logger = logging.getLogger('vector_store')

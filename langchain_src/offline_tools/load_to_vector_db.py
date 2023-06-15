@@ -5,7 +5,7 @@ import numpy as np
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from src.store import DocStore
+from langchain_src.store import DocStore
 
 
 class DBReader(object):

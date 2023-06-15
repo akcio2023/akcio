@@ -4,7 +4,7 @@ The `DataParser` parses documents from given data source and split documents int
 
 By default, it allows files or urls as data source, and uses LangChain `RecursiveCharacterTextSplitter` to split documents.
 
-To configure it, you can modify [config.py](./config.py) to change parameters like chunk size.
+To configure it, you can modify [config.py](../../config.py) to change parameters like chunk size.
 
 ## APIs
 
@@ -37,13 +37,16 @@ docs = load_data(data_src='path/to/doc')
 
 ## Customize DataParser
 
-Modify `DataParser` in [__init__.py](./__init__.py).
+Modify `DataParser` in [data_parser.py](./data_parser.py).
 
 ```python
+import os
+import sys
 from langchain.text_splitter import TextSplitter
-
 from .data_splitter import MarkDownSplitter
-from .config import dataparser_config
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+from config import dataparser_configs
 
 
 CHUNK_SIZE = dataparser_config.get('chunk_size', 300)
@@ -72,8 +75,12 @@ If you want to use third-party loaders, you can add your `source_type`, and defi
    
 For example, if you want to load arxiv, you can use [LangChain Arxiv Loader](https://python.langchain.com/en/latest/modules/indexes/document_loaders/examples/arxiv.html).
 ```python
+import os
+import sys
 from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter
-from .config import dataparser_config
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+from config import dataparser_configs
 
 
 CHUNK_SIZE = dataparser_config.get('chunk_size', 300)
@@ -108,8 +115,12 @@ class DataParser:
 For example, if you want to load from discord, you can use [LlammaIndex Discord Reader](https://gpt-index.readthedocs.io/en/latest/examples/data_connectors/DiscordDemo.html).
 
 ```python
+import os
+import sys
 from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter
-from .config import dataparser_config
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+from config import dataparser_configs
 
 
 CHUNK_SIZE = dataparser_config.get('chunk_size', 300)
@@ -138,5 +149,4 @@ class DataParser:
         channel_ids = [channel_ids]
         docs = DiscordReader(discord_token=discord_token).load_data(channel_ids=channel_ids)
         return docs
-
 ```
