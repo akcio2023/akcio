@@ -1,6 +1,24 @@
+import argparse
 import gradio
 
-from langchain_src.operations import chat, insert, get_history
+# Specify mode
+parser = argparse.ArgumentParser(description='Start service with different modes.')
+parser.add_argument('--langchain', action='store_true')
+parser.add_argument('--towhee', action='store_true')
+
+args = parser.parse_args()
+
+USE_LANGCHAIN = args.langchain
+USE_TOWHEE = args.towhee
+
+assert (USE_LANGCHAIN and not USE_TOWHEE ) or (USE_TOWHEE and not USE_LANGCHAIN), \
+    'The service should start with either "--langchain" or "--towhee".'
+
+if USE_LANGCHAIN:
+    from langchain_src.operations import chat, insert, drop, get_history
+if USE_TOWHEE:
+    from towhee_src.operations import chat, insert, drop, get_history
+
 
 def respond(session, project, msg):
     chat(session, project, msg)
