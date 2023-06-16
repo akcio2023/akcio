@@ -1,9 +1,13 @@
+import os
+import sys
 from typing import Any, Iterable
 
 import elasticsearch
 from langchain.retrievers import ElasticSearchBM25Retriever
 
-from ..config import scalardb_config
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import scalardb_config
 
 
 CONNECTION_ARGS = scalardb_config.get(

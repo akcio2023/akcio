@@ -1,9 +1,14 @@
 from typing import List
+import sys
+import os
 
 from langchain.embeddings.base import Embeddings
 from langchain.embeddings import OpenAIEmbeddings
 
-from .config import textencoder_config
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import textencoder_config
+
 
 MODEL = textencoder_config.get('model', 'text-embedding-ada-002')
 NORM = textencoder_config.get('norm', False)

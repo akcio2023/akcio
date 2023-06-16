@@ -1,11 +1,16 @@
+import os
+import sys
+
 from typing import List, Optional
 from langchain.docstore.document import Document
 from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter
 
-from .config import dataparser_config
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import dataparser_configs
 
 
-CHUNK_SIZE = dataparser_config.get('chunk_size', 300)
+CHUNK_SIZE = dataparser_configs.get('chunk_size', 300)
 
 
 class DataParser:

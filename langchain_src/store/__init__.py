@@ -1,8 +1,13 @@
+import os
+import sys
 from typing import Optional, List
 
 from .vector_store.milvus import VectorStore, Embeddings
 from .memory_store.pg import MemoryStore
-from .config import USE_SCALAR
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import USE_SCALAR
 
 if USE_SCALAR:
     from .scalar_store.es import ScalarStore

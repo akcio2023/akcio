@@ -11,7 +11,7 @@ Refer to [LangChain Models](https://python.langchain.com/en/latest/modules/model
 
 ### Configuration
 
-You can modify [config.py](./config.py) to configure the ChatAI used to build the chat agent.
+You can modify [config.py](../../config.py) to configure the ChatAI used to build the chat agent.
 By default, it calls OpenAI Chat service using GPT-3.5 model and sets temperature to 0.
 You can find more parameters at [OpenAI API Reference](https://platform.openai.com/docs/api-reference/chat).
 

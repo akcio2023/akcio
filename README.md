@@ -30,20 +30,20 @@ You can find more details and instructions at our [documentation](https://github
 
 ### Modules
 
-- [Agent](./src/agent)
+- [Agent](./langchain_src/agent)
     - ChatAgent: agent ensembles all modules together to build up qa system.
     - Other agents (todo)
-- [LLM](./src/llm)
-    - ChatLLM: large language model or service to generate answers (available: [OpenAI](src/llm/openai_chat.py), [Dolly](src/llm/dolly_chat.py))
-- [Embedding](./src/embedding/)
-    - TextEncoder: encoder converts each text input to a vector (available: [OpenAI embedding](src/embedding/openai_embedding.py), [HuggingFace Hub](src/embedding/langchain_huggingface.py))
+- [LLM](./langchain_src/llm)
+    - ChatLLM: large language model or service to generate answers (available: [OpenAI](langchain_src/llm/openai_chat.py), [Dolly](langchain_src/llm/dolly_chat.py))
+- [Embedding](./langchain_src/embedding/)
+    - TextEncoder: encoder converts each text input to a vector (available: [OpenAI embedding](langchain_src/embedding/openai_embedding.py), [HuggingFace Hub](langchain_src/embedding/langchain_huggingface.py))
     - Other encoders (todo)
-- [Store](./src/store)
-    - VectorStore: vector database stores document chunks in embeddings, and performs document retrieval via semantic search. (available: [Milvus/Zilliz Cloud](src/store/vector_store/milvus.py))
-    - ScalarStore: optional, database stores metadata for each document chunk, which supports additional information retrieval. (available: [Elastic](src/store/scalar_store/es.py))
-    - MemoryStore: memory storage stores chat history to support context in conversation. (available: [Postgresql](src/store/memory_store/pg.py))
+- [Store](./langchain_src/store)
+    - VectorStore: vector database stores document chunks in embeddings, and performs document retrieval via semantic search. (available: [Milvus/Zilliz Cloud](langchain_src/store/vector_store/milvus.py))
+    - ScalarStore: optional, database stores metadata for each document chunk, which supports additional information retrieval. (available: [Elastic](langchain_src/store/scalar_store/es.py))
+    - MemoryStore: memory storage stores chat history to support context in conversation. (available: [Postgresql](langchain_src/store/memory_store/pg.py))
     - Other stores (todo)
-- [DataLoader](./src/data_loader/)
+- [DataLoader](./langchain_src/data_loader/)
     - DataParser: tool loads data from given source and then splits documents into processed doc chunks.
     - QuestionGenerator: tool generates a list of potential questions for each document chunk.
 
@@ -64,7 +64,7 @@ You can find more details and instructions at our [documentation](https://github
     - Agent
 
         It will use default agents and prompts.
-        If you want to configure prompts or customize agent modules, refer to [agent](./src/agent) for guide.
+        If you want to configure prompts or customize agent modules, refer to [agent](./langchain_src/agent) for guide.
 
     - LLM
 
@@ -74,7 +74,7 @@ You can find more details and instructions at our [documentation](https://github
         $ export OPENAI_API_KEY=your_keys_here
         ```
 
-        If you want to customize llm modules, you can refer to [llm](./src/llm) for guide.
+        If you want to customize llm modules, you can refer to [llm](./langchain_src/llm) for guide.
         
     - Embedding
 
@@ -83,16 +83,15 @@ You can find more details and instructions at our [documentation](https://github
         - dim: 768
         - normalization: True
 
-        If you want to customize embedding method, you can refer to [embedding](./src/embedding) for guide.
+        If you want to customize embedding method, you can refer to [embedding](./langchain_src/embedding) for guide.
 
     - Store
 
         - Vector Store: You need to prepare the service of vector database in advance. For example, you can refer to [Milvus Documents](https://milvus.io/docs) or [Zilliz Cloud](https://zilliz.com/doc/quick_start) to learn about how to start a Milvus service.
-        - Scalar Store (Optional): This is optional, only work when `USE_SCALAR` is true in [configuration](./src/store/config.py). If this is enabled (i.e. USE_SCALAR=True), the default scalar store will use [Elastic](https://www.elastic.co/). In this case, you need to prepare the Elasticsearch service in advance.
+        - Scalar Store (Optional): This is optional, only work when `USE_SCALAR` is true in [configuration](config.py). If this is enabled (i.e. USE_SCALAR=True), the default scalar store will use [Elastic](https://www.elastic.co/). In this case, you need to prepare the Elasticsearch service in advance.
         - Memory Store: You need to prepare the database for memory storage as well. By default, the memory store uses [Postgresql](https://www.postgresqltutorial.com) which requires installation.
 
-        The store will use [default store configs](./src/store/config.py).
-        You can modify the the [config file](./src/store/config.py).
+        The store will use default store configs.
         To set up your special connections for each database, you can also export environment variables instead of modifying:
 
         ```shell
@@ -100,13 +99,20 @@ You can find more details and instructions at our [documentation](https://github
         $ export PG_URI=postgresql://postgres:postgres@localhost/chat_history
         ```
 
+        For advanced configurations for store services, you can modify the Store section in [config.py](config.py).
+
 4. Start service
 
     The main script will run a FastAPI service with default address `localhost:8900`.
 
-    ```shell
-    $ python main.py
-    ```
+    - Option 1: LangChain
+        ```shell
+        $ python main.py --langchain
+        ```
+    - Option 2: Towhee (WIP)
+        ```shell
+        $ python main.py --towhee
+        ```
 
 4. Access via browser
     
@@ -125,7 +131,7 @@ You can find more details and instructions at our [documentation](https://github
 
 ## Load data
 
-The `insert` function in [operations](./src/operations.py) loads project data from url(s) or file(s).
+The `insert` function in [operations](./langchain_src/operations.py) loads project data from url(s) or file(s).
 
 There are 2 options to load project data:
 
@@ -133,7 +139,7 @@ There are 2 options to load project data:
 
 We recommend this method, which loads data in separate steps.
 There is also advanced options to load document with advanced options.
-Refer to [offline_tools](./src/offline_tools) for instructions.
+Refer to [offline_tools](./langchain_src/offline_tools) for instructions.
 
 ### Option 2. Online
 

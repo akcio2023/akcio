@@ -1,4 +1,5 @@
 import os
+import sys
 import re
 from tqdm import tqdm
 from typing import Optional, List
@@ -10,7 +11,9 @@ from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.chat_models import ChatOpenAI
 
-from .config import questiongenerator_configs
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import questiongenerator_configs
 
 
 class QuestionGenerator:
