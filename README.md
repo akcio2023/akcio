@@ -109,7 +109,7 @@ You can find more details and instructions at our [documentation](https://github
         ```shell
         $ python main.py --langchain
         ```
-    - Option 2: Towhee (WIP)
+    - Option 2: Towhee
         ```shell
         $ python main.py --towhee
         ```

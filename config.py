@@ -29,8 +29,9 @@ USE_SCALAR = False
 vectordb_config = {
     'connection_args': {
         'uri': os.getenv('MILVUS_URI', 'https://localhost:19530'),
-        'user': None,
-        'password': None,
+        'user': os.getenv('MILVUS_USER', ''),
+        'password': os.getenv('MILVUS_PASSWORD', ''),
+        'secure': os.getenv('MILVUS_SECURE', False)
         },
     'top_k': 10,
     'threshold': 0.6,

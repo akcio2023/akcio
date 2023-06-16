@@ -23,14 +23,13 @@ search_pipeline = AutoPipes.pipeline('osschat-search', config=doc_store.search_c
 
 def chat(session_id, project, question):
     '''Chat API'''
-    history = []
-    # history = memory_store.get_history(project, session_id)
+    history = memory_store.get_history(project, session_id)
     res = search_pipeline(question, history, project)
     final_answer = res.get()[0]
 
     # Update history
-    # messages = [{'question': question, 'answer': final_answer}]
-    # memory_store.add_history(project, session_id, messages)
+    messages = [(question, final_answer)]
+    memory_store.add_history(project, session_id, messages)
     return final_answer
 
 
@@ -87,20 +86,26 @@ def get_history(project, session_id):
         raise RuntimeError from e
 
 
-if __name__ == '__main__':
-    project = 'akcio'
-    data_src = 'https://docs.towhee.io/Triton%20Server/triton/'
-    session_id = 'test000'
-    question = 'How to debug pipeline in triton?'
+# if __name__ == '__main__':
+    # project = 'akcio'
+    # data_src = 'https://docs.towhee.io/'
+    # session_id = 'test000'
+    # question1 = 'What is Towhee?'
+    # question2 = 'What does it do?'
 
-    count = insert(data_src=data_src, project=project, source_type='url')
-    print('Count:', count)
-    print('Check:', check(project))
+    # count = insert(data_src=data_src, project=project, source_type='url')
+    # print('\nCount:', count)
+    # print('\nCheck:', check(project))
 
-    answer = chat(project=project, session_id=session_id, question=question)
-    print('Answer:', answer)
-    print('Check:', check(project))
-    print('History:', get_history(project, session_id))
+    # answer = chat(project=project, session_id=session_id, question=question1)
+    # print('\nAnswer:', answer)
+    # print('\nCheck:', check(project))
 
-    drop(project=project)
-    print(check(project))
+    # answer = chat(project=project, session_id=session_id, question=question2)
+    # print('\nAnswer:', answer)
+    # print('\nCheck:', check(project))
+    # print('\nHistory:', get_history(project, session_id))
+
+    # print('\nDropping project ...')
+    # drop(project=project)
+    # print(check(project))

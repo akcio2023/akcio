@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 from typing import Optional, List
 
 import psycopg  # pylint: disable=C0415
@@ -21,8 +22,10 @@ class DocStore:
         self.milvus_uri = vectordb_config['connection_args']['uri']
         self.milvus_host = self.milvus_uri.split('https://')[1].split(':')[0]
         self.milvus_port = self.milvus_uri.split('https://')[1].split(':')[1]
-        self.milvus_user = vectordb_config['connection_args']['user']
-        self.milvus_password = vectordb_config['connection_args']['password']
+        milvus_user = vectordb_config['connection_args']['user']
+        self.milvus_user = None if milvus_user == '' else milvus_user
+        milvus_password = vectordb_config['connection_args']['password']
+        self.milvus_password = None if milvus_password == '' else milvus_password
 
         connections.connect(
             host=self.milvus_host,
@@ -72,11 +75,7 @@ class DocStore:
         schema = CollectionSchema(fields=fields, description='osschat')
         collection = Collection(name=project, schema=schema)
 
-        index_params = {
-            'metric_type':"IP",
-            'index_type':"IVF_FLAT",
-            'params':{"nlist":2048}
-        }
+        index_params = vectordb_config['index_params']
         collection.create_index(field_name="embedding", index_params=index_params)
         return collection
 
@@ -173,10 +172,37 @@ class MemoryStore:
         self.cursor = self.connection.cursor(row_factory=dict_row)
 
     def add_history(self, project: str, session_id: str, messages: List[dict]):
-        pass
+        from psycopg import sql
+
+        self._create_table_if_not_exists(project)
+
+        query = sql.SQL("INSERT INTO {} (session_id, message) VALUES (%s, %s);").format(
+            sql.Identifier(project)
+        )
+        for message in messages:
+            self.cursor.execute(
+                query, (session_id, json.dumps(self._message_to_dict(message)))
+            )
+            self.connection.commit()
 
     def get_history(self, project: str, session_id: str):
-        pass
+        if self.check(project):
+            query = f"SELECT message FROM {project} WHERE session_id = %s ;"
+            self.cursor.execute(query, (session_id,))
+            items = [record["message"] for record in self.cursor.fetchall()]
+            messages = [self._message_from_dict(i) for i in items]
+        else:
+            messages = []
+        return messages
+
+    def _create_table_if_not_exists(self, project):
+        create_table_query = f'''CREATE TABLE IF NOT EXISTS {project} (
+            id SERIAL PRIMARY KEY,
+            session_id TEXT NOT NULL,
+            message JSONB NOT NULL
+        );'''
+        self.cursor.execute(create_table_query)
+        self.connection.commit()
 
     def drop(self, project):
         existence = self.check(project)
@@ -192,3 +218,11 @@ class MemoryStore:
         self.cursor.execute(check, (project,))
         record = self.cursor.fetchall()
         return bool(record[0]['count'] > 0)
+    
+    @staticmethod
+    def _message_from_dict(message: dict):
+        return tuple(message['data'])
+    
+    @staticmethod
+    def _message_to_dict(message: tuple) -> dict:
+        return {'type': 'chat', 'data': message}
