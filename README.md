@@ -15,8 +15,8 @@ Index
 ChatGPT has constraints due to its limited knowledge base, sometimes resulting in hallucinating answers when asked about unfamiliar topics. We are introducing the new AI stack, ChatGPT+Vector database+prompt-as-code, or the CVP Stack, to overcome this constraint.
 
 We have built [OSSChat](https://osschat.io) as a working demonstration of the CVP stack. Now we are presenting the technology behind OSSChat in this repository with a code name of Akcio.
-<img width="1056" alt="image" src="https://github.com/akcio2023/akcio/assets/83447078/6146ceb4-3889-4d3b-9711-9e5535b42c7d">
 
+<img src='pics/osschat_web.png' width='100%' alignment='centre'>
 
 With this project, you are able to build a knowledge-enhanced ChatBot using LLM service like ChatGPT. 
 By the end, you will learn how to start a backend service using FastAPI, which provides standby APIs to support further applications. Alternatively, we show how to use Gradio to build an online demo with user interface.
