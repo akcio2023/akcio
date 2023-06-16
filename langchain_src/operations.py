@@ -126,13 +126,14 @@ def load(document_strs: List[str], project: str):
 #     question = 'How to debug Towhee pipeline in triton?'
 
 #     count = insert(data_src=data_src, project=project, source_type='url')
-#     print('Count:', count)
-#     print('Check:', check(project))
+#     print('\nCount:', count)
+#     print('\nCheck:', check(project))
 
 #     answer = chat(project=project, session_id=session_id, question=question)
-#     print('Answer:', answer)
-#     print('Check:', check(project))
-#     print('History:', get_history(project, session_id))
+#     print('\nAnswer:', answer)
+#     print('\nCheck:', check(project))
+#     print('\nHistory:', get_history(project, session_id))
 
+#     print('\nDropping project ...')
 #     drop(project=project)
 #     print(check(project))
