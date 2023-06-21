@@ -8,6 +8,7 @@ import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from langchain_src.offline_tools.load_to_vector_db import load_to_vector_db
+from langchain_src.offline_tools.stackoverflow_json2csv import stackoverflow_json2csv
 from langchain_src.offline_tools.generate_questions import get_output_csv
 from langchain_src.embedding import TextEncoder
 from tqdm import tqdm
@@ -103,8 +104,8 @@ def run_loading(project_root_or_file, project_name, mode, url_domain=None, emb_b
         output_csv = get_output_csv(project_root_or_file, project_name, url_domain, mode=mode,
                                     patterns=['README.*', 'readme.*'], enable_qa=enable_qa, num_parallel=qa_num_parallel)
 
-    # elif mode == 'stackoverflow': #todo
-    #     output_csv = stackoverflow_json2csv(project_root_or_file)
+    elif mode == 'stackoverflow':
+        output_csv = stackoverflow_json2csv(project_root_or_file)
     # elif mode == 'custom':  # todo
     #     pass
     #
@@ -120,8 +121,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_root_or_file", type=str, required=True,
                         help='It can be a folder or file path containing your project information.')
-    parser.add_argument("--project_name", default='', type=str, required=False,
-                        help='It is your project name. When mode is `stackoverflow`, project_name is not required.')
+    parser.add_argument("--project_name", type=str, required=True,
+                        help='It is your project name. It is also the collection_name in the vector database.')
     # when mode == 'project',
     # `project_root_or_file` is a repo root which contains **/*.md files.
     # when mode == 'github',
@@ -129,8 +130,9 @@ if __name__ == '__main__':
     # when mode == 'stackoverflow',
     # `project_root_or_file` can be a project folder containing json files, or a root containing project folders.
     parser.add_argument("--mode", type=str, choices=['project', 'github', 'stackoverflow', 'custom'], required=True,
-                        help='''When mode == 'project', `project_root_or_file` is a repo root which contains **/*.md files.\n
-When mode == 'github', `project_root_or_file` can be a repo with '|', which means "(namespace)|(repo_name)", or a root containing repo folders with '|'.''')
+                        help='''When mode == 'project', `project_root_or_file` is a repo root which contains **/*.md files.
+When mode == 'github', `project_root_or_file` can be a repo with '|', which means "(namespace)|(repo_name)", or a root containing repo folders with '|'.
+When mode == 'stackoverflow', `project_root_or_file` can be a project folder containing json files, or a root containing project folders.''')
     parser.add_argument("--url_domain", type=str, required=False, help='''When the mode is project, you can specify a url domain, so that the relative directory of your file is the same relative path added after your domain.
 When the mode is github, there is no need to specify the url, the url path is the url of your github repo.
 When the mode is stackoverflow, there is no need to specify the url, because the url can be obtained in the answer json.''')
@@ -139,13 +141,15 @@ When the mode is stackoverflow, there is no need to specify the url, because the
     parser.add_argument("--load_batch_size", type=int, required=False, default=256,
                         help='Batch size when loading to vector db.')
     parser.add_argument("--enable_qa", type=int, required=False, default=1,
-                        help='Whether to use the generate question mode, which will use llm to generate questions related to doc chunks, and use questions to match instead of doc chunks.')
+                        help='Whether to use the generate question mode, which will use llm to generate questions related to doc chunks, and use questions to match instead of doc chunks. When the mode is stackoverflow, no need to specify it.')
     parser.add_argument("--qa_num_parallel", default=8, type=int, required=False,
-                        help='The number of concurrent request when generating problems. If your openai account does not support high request rates, I suggest you set this value very small, such as 1, else you can use a higher num such as 8, or 16.')
+                        help='The number of concurrent request when generating problems. If your openai account does not support high request rates, I suggest you set this value very small, such as 1, else you can use a higher num such as 8, or 16. When the mode is stackoverflow, no need to specify it.')
     # parser.add_argument("--embedding_devices", type=str, default='0,1', required=False)
     args = parser.parse_args()
     enable_qa = False if args.enable_qa == 0 else True
     t0 = time.time()
+    if args.project_root_or_file.endswith('/'):
+        args.project_root_or_file = args.project_root_or_file[:-1]
     # embedding_devices = [int(device_id) for device_id in args.embedding_devices.split(',')]
     run_loading(args.project_root_or_file, args.project_name, args.mode, args.url_domain, args.emb_batch_size,
                 args.load_batch_size, enable_qa, args.qa_num_parallel)
