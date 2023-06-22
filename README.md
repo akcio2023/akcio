@@ -57,7 +57,7 @@ You can find more details and instructions at our [documentation](https://github
 
 2. Install dependencies
     ```shell
-    $ pip -r requirements.txt
+    $ pip install -r requirements.txt
     ```
 
 3. Configure modules
