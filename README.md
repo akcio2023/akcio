@@ -89,13 +89,18 @@ You can find more details and instructions at our [documentation](https://github
 
         - Vector Store: You need to prepare the service of vector database in advance. For example, you can refer to [Milvus Documents](https://milvus.io/docs) or [Zilliz Cloud](https://zilliz.com/doc/quick_start) to learn about how to start a Milvus service.
         - Scalar Store (Optional): This is optional, only work when `USE_SCALAR` is true in [configuration](config.py). If this is enabled (i.e. USE_SCALAR=True), the default scalar store will use [Elastic](https://www.elastic.co/). In this case, you need to prepare the Elasticsearch service in advance.
-        - Memory Store: You need to prepare the database for memory storage as well. By default, the memory store uses [Postgresql](https://www.postgresqltutorial.com) which requires installation.
+        - Memory Store: You need to prepare the database for memory storage as well. By default, the memory store uses [Postgresql](https://www.postgresqltutorial.com) which much be running and be configured with a database and user and password with wriote and create access.
 
         The store will use default store configs.
-        To set up your special connections for each database, you can also export environment variables instead of modifying:
+        To set up your special connections for each database, you can export environment variables instead of modifying **config.py**.
 
+        For the Vector Store, set **MILVUS_URI**:
         ```shell
         $ export MILVUS_URI=https://localhost:19530
+        ```
+
+       For the Memory Store, set **PG_URI** to **postgresql://{user}:{password}@{host}/{database_name}**:
+        ```shell
         $ export PG_URI=postgresql://postgres:postgres@localhost/chat_history
         ```
 
