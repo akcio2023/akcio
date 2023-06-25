@@ -1,9 +1,11 @@
 langchain==0.0.151
 unstructured
+pexpect
 pdf2image
-psycopg
+psycopg[binary,pool]
 openai
 gradio>=3.30.0
 fastapi
 uvicorn
 towhee>=1.1.0
+pymilvus
