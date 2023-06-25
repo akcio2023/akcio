@@ -1,23 +1,19 @@
 import sys
 import os
-import json
-from typing import Optional, List
 
-import psycopg  # pylint: disable=C0415
-from psycopg.rows import dict_row  # pylint: disable=C0415
 from pymilvus import connections, Collection
-from towhee import AutoConfig
+from towhee import AutoConfig, AutoPipes
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from config import (
     USE_SCALAR,
     textencoder_config, chatllm_configs,
-    vectordb_config, scalardb_config, memorydb_config
+    vectordb_config, scalardb_config
     )
 
 
-class DocStore:
+class TowheePipelines:
     def __init__(self):
         self.milvus_uri = vectordb_config['connection_args']['uri']
         self.milvus_host = self.milvus_uri.split('https://')[1].split(':')[0]
@@ -50,18 +46,15 @@ class DocStore:
                 basic_auth=self.es_basic_auth
                 )
 
+    @property
+    def search_pipeline(self):
+        search_pipeline = AutoPipes.pipeline('osschat-search', config=self.search_config)
+        return search_pipeline
 
-    def search(self, project: str, query: str):
-        # todo
-        pass
-
-    def insert(self, project: str, data: List[str], metadatas: Optional[List[dict]] = None):
-        # todo
-        pass
-
-    def insert_embeddings(self, data: List[float], metadatas: List[dict]):
-        # todo
-        pass
+    @property
+    def insert_pipeline(self):
+        insert_pipeline = AutoPipes.pipeline('osschat-insert', config=self.insert_config)
+        return insert_pipeline
 
     def create_project(self, project: str):
         from pymilvus import CollectionSchema, FieldSchema, DataType
@@ -127,6 +120,7 @@ class DocStore:
         search_config.milvus_password = self.milvus_password
         search_config.milvus_top_k = vectordb_config['top_k']
         search_config.threshold = vectordb_config['threshold']
+        
         # Configure scalar store (ES)
         if USE_SCALAR:
             search_config.es_enable = True
@@ -164,65 +158,3 @@ class DocStore:
         else:
             insert_config.es_enable = False
         return insert_config
-        
-class MemoryStore:
-    def __init__(self):
-        '''Initialize memory storage: e.g. history_db'''
-        self.connection = psycopg.connect(memorydb_config['connect_str'])
-        self.cursor = self.connection.cursor(row_factory=dict_row)
-
-    def add_history(self, project: str, session_id: str, messages: List[dict]):
-        from psycopg import sql
-
-        self._create_table_if_not_exists(project)
-
-        query = sql.SQL("INSERT INTO {} (session_id, message) VALUES (%s, %s);").format(
-            sql.Identifier(project)
-        )
-        for message in messages:
-            self.cursor.execute(
-                query, (session_id, json.dumps(self._message_to_dict(message)))
-            )
-            self.connection.commit()
-
-    def get_history(self, project: str, session_id: str):
-        if self.check(project):
-            query = f"SELECT message FROM {project} WHERE session_id = %s ;"
-            self.cursor.execute(query, (session_id,))
-            items = [record["message"] for record in self.cursor.fetchall()]
-            messages = [self._message_from_dict(i) for i in items]
-        else:
-            messages = []
-        return messages
-
-    def _create_table_if_not_exists(self, project):
-        create_table_query = f'''CREATE TABLE IF NOT EXISTS {project} (
-            id SERIAL PRIMARY KEY,
-            session_id TEXT NOT NULL,
-            message JSONB NOT NULL
-        );'''
-        self.cursor.execute(create_table_query)
-        self.connection.commit()
-
-    def drop(self, project):
-        existence = self.check(project)
-        query = f'DROP TABLE {project};'
-        self.cursor.execute(query)
-        self.connection.commit()
-
-        existence = self.check(project)
-        assert not existence, f'Failed to drop table {project}.'
-
-    def check(self, project):
-        check = 'SELECT COUNT(*) FROM pg_class WHERE relname = %s;'
-        self.cursor.execute(check, (project,))
-        record = self.cursor.fetchall()
-        return bool(record[0]['count'] > 0)
-    
-    @staticmethod
-    def _message_from_dict(message: dict):
-        return tuple(message['data'])
-    
-    @staticmethod
-    def _message_to_dict(message: tuple) -> dict:
-        return {'type': 'chat', 'data': message}
