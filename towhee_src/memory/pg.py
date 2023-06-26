@@ -6,14 +6,14 @@ from typing import List
 import psycopg
 from psycopg.rows import dict_row
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from config import memorydb_config
 
         
 class MemoryStore:
     def __init__(self):
-        '''Initialize memory storage: e.g. history_db'''
+        '''Initialize memory storage'''
         self.connection = psycopg.connect(memorydb_config['connect_str'])
         self.cursor = self.connection.cursor(row_factory=dict_row)
 
