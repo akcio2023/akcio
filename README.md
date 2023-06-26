@@ -23,18 +23,37 @@ By the end, you will learn how to start a backend service using FastAPI, which p
 
 ## Overview
 
-The system is built on top of LangChain Agent using vector database for semantic search and memory storage for context support.
-You can find more details and instructions at our [documentation](https://github.com/akcio2023/akcio/wiki).
-
 <img src='pics/osschat.png' width='75%' alignment='centre'>
 
-### Modules
+Akcio allows you to create a ChatGPT-like system with added intelligence obtained through semantic search of customized knowledge base.
+Instead of sending the user query directly to LLM service, our system firstly retrieves relevant information from stores by semantic search or keyword match. Then it feeds both user needs and helpful information into LLM. This allows LLM to better tailor its response to the user's needs and provide more accurate and helpful information.
+
+You can find more details and instructions at our [documentation](https://github.com/akcio2023/akcio/wiki).
+
+Akcio offers two AI platforms to choose from: [Towhee](https://towhee.io) or [LangChain](https://langchain.com).
+
+### Option 1: Towhee
+
+The option using Towhee simplifies the process of building a system by providing [pre-defined pipelines](https://towhee.io/tasks/pipeline). These built-in pipelines require less coding and make system building much easier. If you require customization, you can either simply modify configuration or create your own pipeline with rich options of [Towhee Operators](https://towhee.io/tasks/operator).
+
+- [Pipelines](./towhee_src/pipelines)
+    - Insert: the insert pipeline builds a knowledge base by saving documents and corresponding data in database(s).
+    - Search: the search pipeline enables the question-answering capability powered by information retrieval (semantic search and optional keyword match) and LLM service. 
+    - Prompt: a prompt operator prepares messages for LLM by assembling system message, chat history, and the user's query processed by template.
+
+- [Memory](./towhee_src/memory):
+    The memory storage stores chat history to support context in conversation. (available: [Postgresql](./towhee_src/memory/pg.py))
+
+
+### Option 2: LangChain
+
+The option using LangChain employs the use of [Agent](https://python.langchain.com/docs/modules/agents) in order to enable LLM to utilize specific tools, resulting in a greater demand for LLM's ability to comprehend tasks and make informed decisions.
 
 - [Agent](./langchain_src/agent)
     - ChatAgent: agent ensembles all modules together to build up qa system.
     - Other agents (todo)
 - [LLM](./langchain_src/llm)
-    - ChatLLM: large language model or service to generate answers (available: [OpenAI](langchain_src/llm/openai_chat.py), [Dolly](langchain_src/llm/dolly_chat.py))
+    - ChatLLM: large language model or service to generate answers (available: [OpenAI](langchain_src/llm/openai_chat.py), [Dolly](langchain_src/llm/dolly_chat.py), [Ernie](langchain_src/llm/ernie.py))
 - [Embedding](./langchain_src/embedding/)
     - TextEncoder: encoder converts each text input to a vector (available: [OpenAI embedding](langchain_src/embedding/openai_embedding.py), [HuggingFace Hub](langchain_src/embedding/langchain_huggingface.py))
     - Other encoders (todo)

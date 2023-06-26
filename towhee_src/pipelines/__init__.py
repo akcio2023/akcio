@@ -1,20 +1,23 @@
 import sys
 import os
+from typing import Any
 
 from pymilvus import connections, Collection
 from towhee import AutoConfig, AutoPipes
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from config import (
     USE_SCALAR,
     textencoder_config, chatllm_configs,
     vectordb_config, scalardb_config
     )
+from towhee_src.pipelines.prompt import PROMPT_OP
 
 
 class TowheePipelines:
-    def __init__(self):
+    def __init__(self, prompt_op: Any = PROMPT_OP):
+        self.prompt_op = prompt_op
         self.milvus_uri = vectordb_config['connection_args']['uri']
         self.milvus_host = self.milvus_uri.split('https://')[1].split(':')[0]
         self.milvus_port = self.milvus_uri.split('https://')[1].split(':')[1]
@@ -56,51 +59,6 @@ class TowheePipelines:
         insert_pipeline = AutoPipes.pipeline('osschat-insert', config=self.insert_config)
         return insert_pipeline
 
-    def create_project(self, project: str):
-        from pymilvus import CollectionSchema, FieldSchema, DataType
-
-        fields = [
-            FieldSchema(name='id', dtype=DataType.INT64, description='ids', is_primary=True, auto_id=True),
-            FieldSchema(name='text_id', dtype=DataType.VARCHAR, description='text', max_length=500),
-            FieldSchema(name='text', dtype=DataType.VARCHAR, description='text', max_length=1000),
-            FieldSchema(name='embedding', dtype=DataType.FLOAT_VECTOR, description='embedding vectors', dim=textencoder_config['dim'])
-            ]
-        schema = CollectionSchema(fields=fields, description='osschat')
-        collection = Collection(name=project, schema=schema)
-
-        index_params = vectordb_config['index_params']
-        collection.create_index(field_name="embedding", index_params=index_params)
-        return collection
-
-    def drop(self, project):
-        assert self.has_project(project), f'No project store: {project}'
-        # drop vector store
-        collection = Collection(project)
-        collection.drop()
-
-        if USE_SCALAR:
-            # drop scalar store
-            self.es_client.indices.delete(index=project)
-
-        assert not self.has_project(project), f'Failed to drop project store : {project}'
-
-    def has_project(self, project):
-        from pymilvus import utility
-
-        status = utility.has_collection(project) # check vector store
-        if USE_SCALAR:
-            assert self.es_client.indices.exists(index=project) == status # check scalar store
-        return status
-    
-    def count_entities(self, project):
-        collection = Collection(project)
-        collection.flush()
-        milvus_count = collection.num_entities
-        if USE_SCALAR:
-            es_count = self.es_client.count(index=project)['count']
-            assert es_count == milvus_count, 'Mismatched data count in Milvus vs Elastic.'
-        return milvus_count
-
     @property
     def search_config(self):
         search_config = AutoConfig.load_config('osschat-search')
@@ -112,6 +70,9 @@ class TowheePipelines:
         # Configure LLM
         search_config.llm_src = 'openai'
         search_config.openai_api_key = chatllm_configs['openai_api_key']
+        
+        if self.prompt_op:
+            search_config.customize_prompt = self.prompt_op
 
         # Configure vector store (Milvus/Zilliz)
         search_config.milvus_host = self.milvus_host
@@ -158,3 +119,48 @@ class TowheePipelines:
         else:
             insert_config.es_enable = False
         return insert_config
+    
+    def create_project(self, project: str):
+        from pymilvus import CollectionSchema, FieldSchema, DataType
+
+        fields = [
+            FieldSchema(name='id', dtype=DataType.INT64, description='ids', is_primary=True, auto_id=True),
+            FieldSchema(name='text_id', dtype=DataType.VARCHAR, description='text', max_length=500),
+            FieldSchema(name='text', dtype=DataType.VARCHAR, description='text', max_length=1000),
+            FieldSchema(name='embedding', dtype=DataType.FLOAT_VECTOR, description='embedding vectors', dim=textencoder_config['dim'])
+            ]
+        schema = CollectionSchema(fields=fields, description='osschat')
+        collection = Collection(name=project, schema=schema)
+
+        index_params = vectordb_config['index_params']
+        collection.create_index(field_name="embedding", index_params=index_params)
+        return collection
+
+    def drop(self, project):
+        assert self.has_project(project), f'No project store: {project}'
+        # drop vector store
+        collection = Collection(project)
+        collection.drop()
+
+        if USE_SCALAR:
+            # drop scalar store
+            self.es_client.indices.delete(index=project)
+
+        assert not self.has_project(project), f'Failed to drop project store : {project}'
+
+    def has_project(self, project):
+        from pymilvus import utility
+
+        status = utility.has_collection(project) # check vector store
+        if USE_SCALAR:
+            assert self.es_client.indices.exists(index=project) == status # check scalar store
+        return status
+    
+    def count_entities(self, project):
+        collection = Collection(project)
+        collection.flush()
+        milvus_count = collection.num_entities
+        if USE_SCALAR:
+            es_count = self.es_client.count(index=project)['count']
+            assert es_count == milvus_count, 'Mismatched data count in Milvus vs Elastic.'
+        return milvus_count
