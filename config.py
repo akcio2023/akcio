@@ -1,6 +1,7 @@
 import os
 
 ################## LLM ##################
+LLM_OPTION = os.getenv('LLM_OPTION', 'openai')  # select your LLM service
 chat_configs = {
     'openai': {
         'openai_model': 'gpt-3.5-turbo',
@@ -37,7 +38,7 @@ textencoder_config = {
 
 
 ################## Store ##################
-USE_SCALAR = False
+USE_SCALAR = os.getenv('USE_SCALAR', False)
 
 # Vector db configs
 vectordb_config = {
