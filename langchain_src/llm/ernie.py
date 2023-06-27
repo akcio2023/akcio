@@ -2,18 +2,26 @@ from typing import Mapping, Any, List, Optional, Tuple, Dict
 import requests
 import json
 import os
+import sys
 
 from langchain.chat_models.base import BaseChatModel
 from langchain.schema import BaseMessage, ChatResult, HumanMessage, AIMessage, SystemMessage, ChatMessage, ChatGeneration
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import chat_configs
+
+chat_configs = chat_configs['ernie']
+llm_kwargs = chat_configs.get('llm_kwargs', {})
+
 
 class ChatLLM(BaseChatModel):
     '''Chat with LLM given context. Must be a LangChain BaseLanguageModel to adapt agent.'''
-    temperature: float = 0.7
-    api_key: str = os.getenv("ERNIE_API_KEY")
-    secret_key: str = os.getenv("ERNIE_SECRET_KEY")
-    max_tokens: Optional[int] = None
-    n: int = 1
+    api_key: str = chat_configs['ernie_api_key']
+    secret_key: str = chat_configs['ernie_secret_key']
+    temperature: float = llm_kwargs.get('temperature', 0)
+    max_tokens: Optional[int] = llm_kwargs.get('max_tokens', None)
+    n: int = llm_kwargs.get('n', 1)
 
     def _generate(self, messages: List[BaseMessage], stop: Optional[List[str]] = None) -> ChatResult:
         message_dicts, params = self._create_message_dicts(messages, stop)

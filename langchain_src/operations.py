@@ -119,21 +119,33 @@ def load(document_strs: List[str], project: str):
     return num
 
 
-# if __name__ == '__main__':
-#     project = 'akcio'
-#     data_src = 'https://docs.towhee.io/Triton%20Server/triton/'
-#     session_id = 'test000'
-#     question = 'How to debug Towhee pipeline in triton?'
+if __name__ == '__main__':
+    project = 'akcio'
+    data_src = 'https://docs.towhee.io/'
+    session_id = 'test000'
+    question0 = 'What is your code name?'
+    question1 = 'What is Towhee?'
+    question2 = 'What does it do?'
 
-#     count = insert(data_src=data_src, project=project, source_type='url')
-#     print('\nCount:', count)
-#     print('\nCheck:', check(project))
+    count = insert(data_src=data_src, project=project, source_type='url')
+    print('\nCount:', count)
+    print('\nCheck:', check(project))
 
-#     answer = chat(project=project, session_id=session_id, question=question)
-#     print('\nAnswer:', answer)
-#     print('\nCheck:', check(project))
-#     print('\nHistory:', get_history(project, session_id))
 
-#     print('\nDropping project ...')
-#     drop(project=project)
-#     print(check(project))
+    
+    answer = chat(project=project, session_id=session_id, question=question0)
+    print('\nAnswer:', answer)
+    print('\nCheck:', check(project))
+
+    answer = chat(project=project, session_id=session_id, question=question1)
+    print('\nAnswer:', answer)
+    print('\nCheck:', check(project))
+
+    answer = chat(project=project, session_id=session_id, question=question2)
+    print('\nAnswer:', answer)
+    print('\nCheck:', check(project))
+    print('\nHistory:', get_history(project, session_id))
+
+    print('\nDropping project ...')
+    drop(project=project)
+    print(check(project))

@@ -1,16 +1,30 @@
 import os
 
 ################## LLM ##################
-chatllm_configs = {
-    'model_name': 'gpt-3.5-turbo',
-    'temperature': 0.8,
-    'openai_api_key': os.getenv('OPENAI_API_KEY', 'your_openai_key_goes_here'),  # will use enviornment variable if not set in configs
-    # 'openai_organization': ‘your_organization_goes_here’,  # will use enviornment variable if not set in configs
-    # 'request_timeout': 600,  # in seconds
-    # 'max_retries': 3,
-    # 'streaming': False,
-    # 'n': 1,
-    # 'max_tokens': None
+chat_configs = {
+    'openai': {
+        'openai_model': 'gpt-3.5-turbo',
+        'openai_api_key': None,  # will use environment  value 'OPENAI_API_KEY' if None
+        'llm_kwargs': {
+            'temperature': 0.8,
+            # 'max_tokens': 200,
+            }
+    },
+    'ernie': {
+        'ernie_api_key': None, # If None, use environment  value 'ERNIE_API_KEY'
+        'ernie_secret_key': None, # If None, use environment value 'ERNIE_SECRET_KEY'
+        'llm_kwargs': {}
+    },
+    'minimax': {
+        'minimax_model': 'abab5-chat',
+        'minimax_api_key': None, # If None, use environment value 'MINIMAX_API_KEY'
+        'minimax_group_id': None, # If None, use environment value 'MINIMAX_GROUP_ID'
+        'llm_kwargs': {}
+    },
+    'dolly': {
+        'dolly_model': 'databricks/dolly-v2-3b',
+        'llm_kwargs': {'device': 'auto'}
+    },
 }
 
 

@@ -37,14 +37,12 @@ class ScalarStore(ElasticSearchBM25Retriever):
     @classmethod
     def drop(cls, project: str, connection_args: dict = CONNECTION_ARGS):
         client = cls.connect(connection_args)
-        confirm = input(f'Confirm to drop table {project} scalar db (y/n): ')
-        if confirm == 'y':
-            try:
-                client.indices.delete(index=project)
-            except Exception as e:
-                raise RuntimeError from e
-        else:
-            raise RuntimeError('Exiting ...')
+        # confirm = input(f'Confirm to drop table {project} scalar db (y/n): ')
+        # if confirm == 'y':
+        try:
+            client.indices.delete(index=project)
+        except Exception as e:
+            raise RuntimeError from e
 
     @classmethod
     def has_project(cls, project: str, connection_args: dict = CONNECTION_ARGS):

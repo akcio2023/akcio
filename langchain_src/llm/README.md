@@ -16,17 +16,16 @@ By default, it calls OpenAI Chat service using GPT-3.5 model and sets temperatur
 You can find more parameters at [OpenAI API Reference](https://platform.openai.com/docs/api-reference/chat).
 
 ```python
-chatllm_configs = {
-    'model_name': 'gpt-3.5-turbo',
-    'temperature': 0,
-    # 'openai_api_key':'your_openai_key_goes_here',  # will use enviornment variable if not set in configs
-    # 'openai_organization': ‘your_organization_goes_here’,  # will use enviornment variable if not set in configs
-    # 'request_timeout': 600,  # in seconds
-    # 'max_retries': 3,
-    # 'streaming': False,
-    # 'n': 1,
-    # 'max_tokens': 1000
-}
+chat_configs = {
+    'openai': {
+        'openai_model': 'gpt-3.5-turbo',
+        'openai_api_key': None,  # will use environment  value 'OPENAI_API_KEY' if None
+        'llm_kwargs': {
+            'temperature': 0.8,
+            # 'max_tokens': 200,
+            }
+    },
+    }
 ```
 
 ### Usage Example

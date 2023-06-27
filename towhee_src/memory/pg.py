@@ -9,9 +9,10 @@ from psycopg.rows import dict_row
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from config import memorydb_config
+from base import BaseMemory
 
         
-class MemoryStore:
+class MemoryStore(BaseMemory):
     def __init__(self):
         '''Initialize memory storage'''
         self.connection = psycopg.connect(memorydb_config['connect_str'])

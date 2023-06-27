@@ -34,8 +34,8 @@ def insert(data_src, project, source_type: str = 'file'):
     '''Load project docs will load docs from data source and then insert doc embeddings into the project table in the vector store.
     If there is no project table, it will create one.
     '''
-    if not towhee_pipelines.has_project(project):
-        towhee_pipelines.create_project(project)
+    if not towhee_pipelines.check(project):
+        towhee_pipelines.create(project)
     res = insert_pipeline(data_src, project).to_list()
     num = towhee_pipelines.count_entities(project)
     return num
@@ -60,7 +60,7 @@ def drop(project):
 def check(project):
     '''Check existences of project tables in both vector and memory stores.'''
     try:
-        doc_check = towhee_pipelines.has_project(project)
+        doc_check = towhee_pipelines.check(project)
     except Exception as e:
         logger.error('Failed to check table in vector db:\n%s', e)
         raise RuntimeError from e
@@ -91,23 +91,23 @@ def get_history(project, session_id):
 #     question1 = 'What is Towhee?'
 #     question2 = 'What does it do?'
 
-    # count = insert(data_src=data_src, project=project, source_type='url')
-    # print('\nCount:', count)
-    # print('\nCheck:', check(project))
+#     count = insert(data_src=data_src, project=project, source_type='url')
+#     print('\nCount:', count)
+#     print('\nCheck:', check(project))
     
-    # answer = chat(project=project, session_id=session_id, question=question0)
-    # print('\nAnswer:', answer)
-    # print('\nCheck:', check(project))
+#     answer = chat(project=project, session_id=session_id, question=question0)
+#     print('\nAnswer:', answer)
+#     print('\nCheck:', check(project))
 
-    # answer = chat(project=project, session_id=session_id, question=question1)
-    # print('\nAnswer:', answer)
-    # print('\nCheck:', check(project))
+#     answer = chat(project=project, session_id=session_id, question=question1)
+#     print('\nAnswer:', answer)
+#     print('\nCheck:', check(project))
 
-    # answer = chat(project=project, session_id=session_id, question=question2)
-    # print('\nAnswer:', answer)
-    # print('\nCheck:', check(project))
-    # print('\nHistory:', get_history(project, session_id))
+#     answer = chat(project=project, session_id=session_id, question=question2)
+#     print('\nAnswer:', answer)
+#     print('\nCheck:', check(project))
+#     print('\nHistory:', get_history(project, session_id))
 
-    # print('\nDropping project ...')
-    # drop(project=project)
-    # print(check(project))
+#     print('\nDropping project ...')
+#     drop(project=project)
+#     print(check(project))
