@@ -9,14 +9,14 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from base import BasePipelines
 from towhee_src.pipelines.prompt import PROMPT_OP
 from config import (
-    USE_SCALAR,
+    USE_SCALAR, LLM_OPTION,
     textencoder_config, chat_configs,
     vectordb_config, scalardb_config
     )
 
 
 class TowheePipelines(BasePipelines):
-    def __init__(self, llm_src: str = 'openai'):
+    def __init__(self, llm_src: str = LLM_OPTION):
         self.prompt_op = PROMPT_OP
         self.use_scalar = USE_SCALAR
         self.llm_src = llm_src
@@ -67,7 +67,7 @@ class TowheePipelines(BasePipelines):
 
     @property
     def search_config(self):
-        search_config = AutoConfig.load_config('osschat-search', **chat_configs[self.llm_src])
+        search_config = AutoConfig.load_config('osschat-search', llm_src=self.llm_src, **chat_configs[self.llm_src])
         
         # Configure embedding
         search_config.embedding_model = textencoder_config['model']

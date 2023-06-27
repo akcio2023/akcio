@@ -31,14 +31,34 @@ Instead of sending the user query directly to LLM service, our system firstly re
 You can find more details and instructions at our [documentation](https://github.com/akcio2023/akcio/wiki).
 
 Akcio offers two AI platforms to choose from: [Towhee](https://towhee.io) or [LangChain](https://langchain.com).
+It also supports different integrations of LLM service and databases:
+
+|                         |              | **Towhee** | **LangChain** |
+|:-----------------------:|:------------:|:------:|:-----:|
+| **LLM**                 | OpenAI       | ✓      | ✓     |
+|                         | Dolly        | ✓      | ✓     |
+|                         | Ernie        | ✓      | ✓     |
+|                         | DashScope    | ✓      |       |
+|                         | MiniMax      | ✓      |       |
+|                         | ChatGLM      | ✓      |       |
+|                         | SkyChat      | ✓      |       |
+| **Embedding**           | OpenAI       |        | ✓     |
+|                         | HuggingFace  | ✓      | ✓     |
+| **Vector Store**        | Zilliz Cloud | ✓      | ✓     |
+|                         | Milvus       | ✓      | ✓     |
+| **Scalar Store (Optional)** | Elastic  | ✓      | ✓     |
+| **Memory Store**        | Postgresql   | ✓      | ✓     |
+|                         | SQLite       |        |       |
 
 ### Option 1: Towhee
 
 The option using Towhee simplifies the process of building a system by providing [pre-defined pipelines](https://towhee.io/tasks/pipeline). These built-in pipelines require less coding and make system building much easier. If you require customization, you can either simply modify configuration or create your own pipeline with rich options of [Towhee Operators](https://towhee.io/tasks/operator).
 
 - [Pipelines](./towhee_src/pipelines)
-    - **Insert:** the insert pipeline builds a knowledge base by saving documents and corresponding data in database(s).
-    - **Search:** the search pipeline enables the question-answering capability powered by information retrieval (semantic search and optional keyword match) and LLM service. 
+    - **Insert:**
+        The insert pipeline builds a knowledge base by saving documents and corresponding data in database(s).
+    - **Search:**
+        The search pipeline enables the question-answering capability powered by information retrieval (semantic search and optional keyword match) and LLM service.
     - **Prompt:** a prompt operator prepares messages for LLM by assembling system message, chat history, and the user's query processed by template.
 
 - [Memory](./towhee_src/memory):
@@ -53,14 +73,14 @@ The option using LangChain employs the use of [Agent](https://python.langchain.c
     - **ChatAgent:** agent ensembles all modules together to build up qa system.
     - Other agents (todo)
 - [LLM](./langchain_src/llm)
-    - **ChatLLM:** large language model or service to generate answers (available: [OpenAI](langchain_src/llm/openai_chat.py), [Dolly](langchain_src/llm/dolly_chat.py), [Ernie](langchain_src/llm/ernie.py))
+    - **ChatLLM:** large language model or service to generate answers.
 - [Embedding](./langchain_src/embedding/)
-    - **TextEncoder:** encoder converts each text input to a vector (available: [OpenAI embedding](langchain_src/embedding/openai_embedding.py), [HuggingFace Hub](langchain_src/embedding/langchain_huggingface.py))
+    - **TextEncoder:** encoder converts each text input to a vector.
     - Other encoders (todo)
 - [Store](./langchain_src/store)
-    - **VectorStore:** vector database stores document chunks in embeddings, and performs document retrieval via semantic search. (available: [Milvus/Zilliz Cloud](langchain_src/store/vector_store/milvus.py))
+    - **VectorStore:** vector database stores document chunks in embeddings, and performs document retrieval via semantic search.
     - **ScalarStore:** optional, database stores metadata for each document chunk, which supports additional information retrieval. (available: [Elastic](langchain_src/store/scalar_store/es.py))
-    - **MemoryStore:** memory storage stores chat history to support context in conversation. (available: [Postgresql](langchain_src/store/memory_store/pg.py))
+    - **MemoryStore:** memory storage stores chat history to support context in conversation.
 - [DataLoader](./langchain_src/data_loader/)
     - **DataParser:** tool loads data from given source and then splits documents into processed doc chunks.
     - **QuestionGenerator:** tool generates a list of potential questions for each document chunk.
@@ -79,29 +99,38 @@ The option using LangChain employs the use of [Agent](https://python.langchain.c
     ```
 
 3. Configure modules
-    - Agent
 
-        It will use default agents and prompts.
-        If you want to configure prompts or customize agent modules, refer to [agent](./langchain_src/agent) for guide.
+    You can configure all arguments by modifying [config.py](./config.py) to set up your system with default modules.
 
     - LLM
 
-        The default ChatAI module uses OpenAI service, which requires an [OpenAI API key](https://platform.openai.com/account/api-keys).
+        By default, the system will use OpenAI service as the LLM option.
+        To set your OpenAI API key without modifying the configuration file, you can pass it as environment variable.
 
         ```shell
         $ export OPENAI_API_KEY=your_keys_here
         ```
 
-        If you want to customize llm modules, you can refer to [llm](./langchain_src/llm) for guide.
+        <details>
+
+        <summary> Check how to <strong>SWITCH LLM</strong>. </summary>
+         If you want to use another supported LLM service, you can change the LLM option and set up for it.
+         Besides directly modifying the configuration file, you can also set up via environment variables.
+         For example, to use Ernie instead of OpenAI, you need to change the option and set up Ernie API key & secret key:
+
+        ```shell
+        $ export LLM_OPTION=ernie
+        $ export ERNIE_API_KEY=your_ernie_api_key
+        $ export ERNIE_SECRET_KEY=your_ernie_secret_key
+        ```
+        </details>
         
     - Embedding
 
-        By default, the embedding module uses LangChain HuggingFaceEmbeddings to convert text inputs to vectors. Here are some information about the default embedding method:
+        By default, the embedding module uses methods from [Sentence Transformers](https://www.sbert.net/) to convert text inputs to vectors. Here are some information about the default embedding method:
         - model: [multi-qa-mpnet-base-cos-v1](https://huggingface.co/sentence-transformers/multi-qa-mpnet-base-cos-v1)(420MB)
         - dim: 768
         - normalization: True
-
-        If you want to customize embedding method, you can refer to [embedding](./langchain_src/embedding) for guide.
 
     - Store
 
@@ -109,8 +138,8 @@ The option using LangChain employs the use of [Agent](https://python.langchain.c
         - Scalar Store (Optional): This is optional, only work when `USE_SCALAR` is true in [configuration](config.py). If this is enabled (i.e. USE_SCALAR=True), the default scalar store will use [Elastic](https://www.elastic.co/). In this case, you need to prepare the Elasticsearch service in advance.
         - Memory Store: You need to prepare the database for memory storage as well. By default, the memory store uses [Postgresql](https://www.postgresqltutorial.com) which much be running and be configured with a database and user and password with wriote and create access.
 
-        The store will use default store configs.
-        To set up your special connections for each database, you can export environment variables instead of modifying **config.py**.
+        The system will use default store configs.
+        To set up your special connections for each database, you can also export environment variables instead of modifying the configuration file.
 
         For the Vector Store, set **MILVUS_URI**:
         ```shell
@@ -122,19 +151,17 @@ The option using LangChain employs the use of [Agent](https://python.langchain.c
         $ export PG_URI=postgresql://postgres:postgres@localhost/chat_history
         ```
 
-        For advanced configurations for store services, you can modify the Store section in [config.py](config.py).
-
 4. Start service
 
     The main script will run a FastAPI service with default address `localhost:8900`.
 
-    - Option 1: LangChain
+    - Option 1: Towhee
         ```shell
-        $ python main.py --langchain
+        $ python main.py --towhee
         ```
     - Option 2: Towhee
         ```shell
-        $ python main.py --towhee
+        $ python main.py --langchain
         ```
 
 4. Access via browser
