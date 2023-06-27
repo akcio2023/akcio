@@ -1,3 +1,5 @@
+import sys
+import os
 from typing import Mapping, Any, List
 
 import torch
@@ -6,12 +8,19 @@ from transformers import pipeline
 from langchain.chat_models.base import BaseChatModel
 from langchain.schema import BaseMessage, ChatResult, HumanMessage, AIMessage, ChatGeneration
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
+from config import chat_configs
+
+chat_configs = chat_configs['dolly']
+llm_kwargs = chat_configs.get('llm_kwargs', {})
+
 
 class ChatLLM(BaseChatModel):
     '''Chat with LLM given context. Must be a LangChain BaseLanguageModel to adapt agent.'''
 
-    model_name: str = 'databricks/dolly-v2-3b'
-    device: str = 'auto'
+    model_name: str = chat_configs['dolly_model']
+    device: str = llm_kwargs.get('device', 'auto')
 
     generate_text = pipeline(
         model=model_name, torch_dtype=torch.bfloat16, trust_remote_code=True, device_map=device)

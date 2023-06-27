@@ -179,12 +179,13 @@ class VectorStore(Milvus):
             from pymilvus import Collection  # pylint: disable=C0415
 
             collection = Collection(project)
-            confirm = input(f'Confirm to drop table {project} vector db (y/n): ')
-            if confirm == 'y':
+            # confirm = input(f'Confirm to drop table {project} vector db (y/n): ')
+            # if confirm == 'y':
+            try:
                 collection.release()
                 collection.drop()
-            else:
-                raise RuntimeError('Stop dropping table ...')
+            except Exception as e:
+                raise RuntimeError from e
         else:
             raise AttributeError(f'No table in vector db: {project}')
 

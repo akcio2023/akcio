@@ -37,9 +37,9 @@ Akcio offers two AI platforms to choose from: [Towhee](https://towhee.io) or [La
 The option using Towhee simplifies the process of building a system by providing [pre-defined pipelines](https://towhee.io/tasks/pipeline). These built-in pipelines require less coding and make system building much easier. If you require customization, you can either simply modify configuration or create your own pipeline with rich options of [Towhee Operators](https://towhee.io/tasks/operator).
 
 - [Pipelines](./towhee_src/pipelines)
-    - Insert: the insert pipeline builds a knowledge base by saving documents and corresponding data in database(s).
-    - Search: the search pipeline enables the question-answering capability powered by information retrieval (semantic search and optional keyword match) and LLM service. 
-    - Prompt: a prompt operator prepares messages for LLM by assembling system message, chat history, and the user's query processed by template.
+    - **Insert:** the insert pipeline builds a knowledge base by saving documents and corresponding data in database(s).
+    - **Search:** the search pipeline enables the question-answering capability powered by information retrieval (semantic search and optional keyword match) and LLM service. 
+    - **Prompt:** a prompt operator prepares messages for LLM by assembling system message, chat history, and the user's query processed by template.
 
 - [Memory](./towhee_src/memory):
     The memory storage stores chat history to support context in conversation. (available: [Postgresql](./towhee_src/memory/pg.py))
@@ -50,21 +50,20 @@ The option using Towhee simplifies the process of building a system by providing
 The option using LangChain employs the use of [Agent](https://python.langchain.com/docs/modules/agents) in order to enable LLM to utilize specific tools, resulting in a greater demand for LLM's ability to comprehend tasks and make informed decisions.
 
 - [Agent](./langchain_src/agent)
-    - ChatAgent: agent ensembles all modules together to build up qa system.
+    - **ChatAgent:** agent ensembles all modules together to build up qa system.
     - Other agents (todo)
 - [LLM](./langchain_src/llm)
-    - ChatLLM: large language model or service to generate answers (available: [OpenAI](langchain_src/llm/openai_chat.py), [Dolly](langchain_src/llm/dolly_chat.py), [Ernie](langchain_src/llm/ernie.py))
+    - **ChatLLM:** large language model or service to generate answers (available: [OpenAI](langchain_src/llm/openai_chat.py), [Dolly](langchain_src/llm/dolly_chat.py), [Ernie](langchain_src/llm/ernie.py))
 - [Embedding](./langchain_src/embedding/)
-    - TextEncoder: encoder converts each text input to a vector (available: [OpenAI embedding](langchain_src/embedding/openai_embedding.py), [HuggingFace Hub](langchain_src/embedding/langchain_huggingface.py))
+    - **TextEncoder:** encoder converts each text input to a vector (available: [OpenAI embedding](langchain_src/embedding/openai_embedding.py), [HuggingFace Hub](langchain_src/embedding/langchain_huggingface.py))
     - Other encoders (todo)
 - [Store](./langchain_src/store)
-    - VectorStore: vector database stores document chunks in embeddings, and performs document retrieval via semantic search. (available: [Milvus/Zilliz Cloud](langchain_src/store/vector_store/milvus.py))
-    - ScalarStore: optional, database stores metadata for each document chunk, which supports additional information retrieval. (available: [Elastic](langchain_src/store/scalar_store/es.py))
-    - MemoryStore: memory storage stores chat history to support context in conversation. (available: [Postgresql](langchain_src/store/memory_store/pg.py))
-    - Other stores (todo)
+    - **VectorStore:** vector database stores document chunks in embeddings, and performs document retrieval via semantic search. (available: [Milvus/Zilliz Cloud](langchain_src/store/vector_store/milvus.py))
+    - **ScalarStore:** optional, database stores metadata for each document chunk, which supports additional information retrieval. (available: [Elastic](langchain_src/store/scalar_store/es.py))
+    - **MemoryStore:** memory storage stores chat history to support context in conversation. (available: [Postgresql](langchain_src/store/memory_store/pg.py))
 - [DataLoader](./langchain_src/data_loader/)
-    - DataParser: tool loads data from given source and then splits documents into processed doc chunks.
-    - QuestionGenerator: tool generates a list of potential questions for each document chunk.
+    - **DataParser:** tool loads data from given source and then splits documents into processed doc chunks.
+    - **QuestionGenerator:** tool generates a list of potential questions for each document chunk.
 
 ## Deployment
 
