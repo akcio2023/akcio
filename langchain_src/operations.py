@@ -43,17 +43,11 @@ def chat(session_id, project, question):
         memory=memory_db.memory,
         verbose=False
     )
-
-    final_answer = agent_chain.run(input=question)
-
-    # try:
-    #     new_history = [
-    #         {'question': question, 'answer': final_answer}
-    #     ]
-    #     memory_db.add_history(messages=new_history)
-    # except Exception as e:
-    #     logger.error(f'Failed to add history:\n{e}')
-    return final_answer
+    try:
+        final_answer = agent_chain.run(input=question)
+        return final_answer
+    except Exception:
+        return 'Something went wrong. Please clear history and try again!'
 
 
 def insert(data_src, project, source_type: str = 'file'):
@@ -97,7 +91,7 @@ def check(project):
     except Exception as e:
         logger.error('Failed to clean memory for the project:\n%s', e)
         raise RuntimeError from e
-    return {'vector db': doc_check, 'memory': memory_check}
+    return {'store': doc_check, 'memory': memory_check}
 
 
 def get_history(project, session_id):
@@ -109,6 +103,15 @@ def get_history(project, session_id):
     except Exception as e:
         logger.error('Failed to clean memory for the project:\n%s', e)
         raise RuntimeError from e
+    
+
+def clear_history(project, session_id):
+    '''Clear conversation history from memory store.'''
+    try:
+        memory_db = MemoryStore(project, session_id)
+        memory_db.drop(table_name=project, session_id=session_id)
+    except Exception as e:
+        raise RuntimeError(f'Failed to clear memory:\n{e}')
 
 
 def load(document_strs: List[str], project: str):
@@ -133,17 +136,17 @@ def load(document_strs: List[str], project: str):
     
 #     answer = chat(project=project, session_id=session_id, question=question0)
 #     print('\nAnswer:', answer)
-#     print('\nCheck:', check(project))
 
 #     answer = chat(project=project, session_id=session_id, question=question1)
 #     print('\nAnswer:', answer)
-#     print('\nCheck:', check(project))
 
 #     answer = chat(project=project, session_id=session_id, question=question2)
 #     print('\nAnswer:', answer)
-#     print('\nCheck:', check(project))
+
+#     print('\nHistory:', get_history(project, session_id))
+#     clear_history(project, session_id)
 #     print('\nHistory:', get_history(project, session_id))
 
 #     print('\nDropping project ...')
 #     drop(project=project)
-    print(check(project))
+#     print(check(project))

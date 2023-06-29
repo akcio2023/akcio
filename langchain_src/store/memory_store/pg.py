@@ -69,16 +69,24 @@ class MemoryStore:
         return connection, cursor
 
     @classmethod
-    def drop(cls, table_name, connect_str: str = CONNECT_STR):
+    def drop(cls, table_name, connect_str: str = CONNECT_STR, session_id: str = None):
         connection, cursor = cls.connect(connect_str)
 
         existence = cls.check(table_name)
-        query = f'DROP TABLE {table_name};'
-        cursor.execute(query)
-        connection.commit()
 
-        existence = cls.check(table_name=table_name)
-        assert not existence, f'Failed to drop table {table_name}.'
+        if existence:
+            if session_id and len(session_id) > 0:
+                query = f'DELETE FROM {table_name} WHERE session_id = %s ;'
+                cursor.execute(query, (session_id,))
+            else:
+                query = f'DROP TABLE {table_name};'
+                cursor.execute(query)
+            connection.commit()
+
+        if not session_id or len(session_id) == 0:
+            existence = cls.check(table_name)
+            assert not existence, f'Failed to drop table {table_name}.'
+
 
     @classmethod
     def check(cls, table_name, connect_str: str = CONNECT_STR):
