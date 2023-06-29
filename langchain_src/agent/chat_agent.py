@@ -27,7 +27,7 @@ class ChatAgent(ConversationalChatAgent):
                            llm: BaseLanguageModel,
                            tools: Sequence[BaseTool],
                            callback_manager: Optional[BaseCallbackManager] = None,
-                           output_parser: Optional[BaseOutputParser] = None,
+                           output_parser: Optional[BaseOutputParser] = OutputParser(),
                            system_message: str = PREFIX,
                            human_message: str = SUFFIX,
                            input_variables: Optional[List[str]] = None,
