@@ -81,24 +81,20 @@ class DocStore:
     @classmethod
     def drop(cls, project):
         status = cls.has_project(project)
-        assert status['vector store'], f'No table in vector db: {project}'
-
+        assert status, f'No table found for project: {project}'
 
         VectorStore.drop(project)
 
         if USE_SCALAR:
-            assert status['scalar store'], f'No table in scalar db: {project}'
             ScalarStore.drop(project)
 
         status = cls.has_project(project)
-        assert not status['vector store'], f'Failed to drop table in vector db: {project}'
-        if USE_SCALAR:
-            assert not status['scalar store'], f'Failed to drop table in scalar db: {project}'
+        assert not status, f'Failed to drop table for project: {project}'
+
 
     @classmethod
     def has_project(cls, project):
-        status = {}
-        status['vector store'] = VectorStore.has_project(project)
+        status = VectorStore.has_project(project)
         if USE_SCALAR:
-            status['scalar store'] = ScalarStore.has_project(project)
+            assert ScalarStore.has_project(project) == status
         return status

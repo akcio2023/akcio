@@ -30,7 +30,7 @@ def create_session_id():
 def respond(session, project, msg):
     answer = chat(session, project, msg)
     history = get_history(project, session)
-    if history[-1] != (msg, answer):
+    if len(history) == 0 or history[-1] != (msg, answer):
         history.append((msg, answer))
     return history
 
