@@ -9,7 +9,7 @@ from psycopg.rows import dict_row
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from config import memorydb_config
-from base import BaseMemory
+from towhee_src.base import BaseMemory
 
         
 class MemoryStore(BaseMemory):
@@ -51,14 +51,20 @@ class MemoryStore(BaseMemory):
         self.cursor.execute(create_table_query)
         self.connection.commit()
 
-    def drop(self, project):
+    def drop(self, project, session_id=None):
         existence = self.check(project)
-        query = f'DROP TABLE {project};'
-        self.cursor.execute(query)
-        self.connection.commit()
+        if existence:
+            if session_id and len(session_id) > 0:
+                query = f'DELETE FROM {project} WHERE session_id = %s ;'
+                self.cursor.execute(query, (session_id,))
+            else:
+                query = f'DROP TABLE {project};'
+                self.cursor.execute(query)
+            self.connection.commit()
 
-        existence = self.check(project)
-        assert not existence, f'Failed to drop table {project}.'
+        if not session_id or len(session_id) == 0:
+            existence = self.check(project)
+            assert not existence, f'Failed to drop table {project}.'
 
     def check(self, project):
         check = 'SELECT COUNT(*) FROM pg_class WHERE relname = %s;'

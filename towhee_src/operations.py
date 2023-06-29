@@ -20,14 +20,17 @@ search_pipeline = towhee_pipelines.search_pipeline
 
 def chat(session_id, project, question):
     '''Chat API'''
-    history = memory_store.get_history(project, session_id)
-    res = search_pipeline(question, history, project)
-    final_answer = res.get()[0]
+    try:
+        history = memory_store.get_history(project, session_id)
+        res = search_pipeline(question, history, project)
+        final_answer = res.get()[0]
 
-    # Update history
-    messages = [(question, final_answer)]
-    memory_store.add_history(project, session_id, messages)
-    return final_answer
+        # Update history
+        messages = [(question, final_answer)]
+        memory_store.add_history(project, session_id, messages)
+        return final_answer
+    except Exception:
+        return 'Something went wrong. Please clear history and try again!'
 
 
 def insert(data_src, project, source_type: str = 'file'):
@@ -38,20 +41,28 @@ def insert(data_src, project, source_type: str = 'file'):
         towhee_pipelines.create(project)
     res = insert_pipeline(data_src, project).to_list()
     num = towhee_pipelines.count_entities(project)
-    return num
+    assert len(res) <= num, 'Failed to insert data.'
+    return len(res)
 
 
 def drop(project):
     '''Drop project will clean both vector and memory stores.'''
+    status = check(project)
     # Clear vector db
     try:
-        towhee_pipelines.drop(project)
+        if status['store']:
+            towhee_pipelines.drop(project)
+        else:
+            logger.warning('No store for the project.')
     except Exception as e:
         logger.error('Failed to drop project:\n%s', e)
         raise RuntimeError from e
     # Clear memory
     try:
-        memory_store.drop(project)
+        if status['memory']:
+            memory_store.drop(project)
+        else:
+            logger.warning('No memory for the project.')
     except Exception as e:
         logger.error('Failed to clean memory for the project:\n%s', e)
         raise RuntimeError from e
@@ -81,6 +92,14 @@ def get_history(project, session_id):
     except Exception as e:
         logger.error('Failed to clean memory for the project:\n%s', e)
         raise RuntimeError from e
+    
+
+def clear_history(project, session_id):
+    '''Clear conversation history from memory store.'''
+    try:
+        memory_store.drop(project, session_id)
+    except Exception as e:
+        raise RuntimeError(f'Failed to clear memory:\n{e}')
 
 
 # if __name__ == '__main__':
@@ -106,6 +125,9 @@ def get_history(project, session_id):
 #     answer = chat(project=project, session_id=session_id, question=question2)
 #     print('\nAnswer:', answer)
 #     print('\nCheck:', check(project))
+#     print('\nHistory:', get_history(project, session_id))
+
+#     clear_history(project, session_id)
 #     print('\nHistory:', get_history(project, session_id))
 
 #     print('\nDropping project ...')

@@ -46,7 +46,7 @@ vectordb_config = {
         'uri': os.getenv('MILVUS_URI', 'https://localhost:19530'),
         'user': os.getenv('MILVUS_USER', ''),
         'password': os.getenv('MILVUS_PASSWORD', ''),
-        'secure': os.getenv('MILVUS_SECURE', False)
+        'secure': True if os.getenv('MILVUS_SECURE', 'False').lower() == 'true' else False
         },
     'top_k': 10,
     'threshold': 0.6,
