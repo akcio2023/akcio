@@ -26,6 +26,19 @@ chat_configs = {
         'dolly_model': 'databricks/dolly-v2-3b',
         'llm_kwargs': {'device': 'auto'}
     },
+    'skychat': {
+        'skychat_api_host': None, # If None, use default value 'sky-api.singularity-ai.com'
+        'skychat_app_key': None, # If None, use environment value 'SKYCHAT_APP_KEY'
+        'skychat_app_secret': None  # If None, use environment value 'SKYCHAT_APP_SECRET'
+    },
+    'dashscope': {
+        'dashscope_model': 'qwen-plus-v1',
+        'dashscope_api_key': None  # If None, use environment value 'DASHSCOPE_API_KEY'
+    },
+    'chatglm':{
+        'chatglm_model': 'chatglm_130b',
+        'chatglm_api_key': None  # If None, use environment value 'ZHIPUAI_API_KEY'
+    }
 }
 
 
