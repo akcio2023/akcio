@@ -3,7 +3,7 @@ import sys
 
 import numpy as np
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from langchain_src.store import DocStore
 
@@ -21,7 +21,7 @@ class DBReader(object):
             yield row
 
 
-def load_to_vector_db(npy_path, project, batch_size=128, enable_qa=True):
+def langchain_load(npy_path, project, batch_size=128, enable_qa=True):
     if enable_qa:
         # file, question, doc_chunk, url, embedding
         doc_chunk_col_ind = 2
@@ -57,5 +57,4 @@ def load_to_vector_db(npy_path, project, batch_size=128, enable_qa=True):
 
 
 if __name__ == '__main__':
-    load_to_vector_db(npy_path='you npy file path',
-                      project='your project name')
+    langchain_load(npy_path='you npy file path', project='your project name')

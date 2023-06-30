@@ -11,7 +11,7 @@ from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.chat_models import ChatOpenAI
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from config import questiongenerator_configs
 
@@ -174,7 +174,7 @@ If the corresponding answer cannot be found in the doc chunk, the answer is a st
 
 # if __name__ == '__main__':
 #     qg = QuestionGenerator()
-#     file_path = '../../requirements.txt'
+#     file_path = '../requirements.txt'
 
 #     with open(file_path, 'r') as f:
 #         f_doc = f.read()
