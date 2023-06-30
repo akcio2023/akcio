@@ -3,13 +3,13 @@ import pandas as pd
 import csv
 import multiprocessing
 import os
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from langchain_src.data_loader.question_generator import QuestionGenerator
 from datetime import datetime
 from glob import glob
 from tqdm import tqdm
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from offline_tools.generator_questions.question_generator import QuestionGenerator
 
 
 def get_named_col_names(df):

@@ -86,7 +86,6 @@ The option using LangChain employs the use of [Agent](https://python.langchain.c
     - **MemoryStore:** memory storage stores chat history to support context in conversation.
 - [DataLoader](./langchain_src/data_loader/)
     - **DataParser:** tool loads data from given source and then splits documents into processed doc chunks.
-    - **QuestionGenerator:** tool generates a list of potential questions for each document chunk.
 
 ## Deployment
 
@@ -194,8 +193,8 @@ There are 2 options to load project data:
 ### Option 1: Offline
 
 We recommend this method, which loads data in separate steps.
-There is also advanced options to load document with advanced options.
-Refer to [offline_tools](./langchain_src/offline_tools) for instructions.
+There is also advanced options to load document, for example, generating and inserting potential questions for each doc chunk.
+Refer to [offline_tools](./offline_tools) for instructions.
 
 ### Option 2. Online
 
