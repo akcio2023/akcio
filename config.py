@@ -68,7 +68,7 @@ scalardb_config = {
 
 # Memory db configs
 memorydb_config = {
-    'connect_str': os.getenv('PG_URI', 'postgresql://postgres:postgres@localhost/chat_history')
+    'connect_str': os.getenv('SQL_URI', 'postgresql://postgres:postgres@localhost/chat_history')
 }
 
 ################## Data loader ##################

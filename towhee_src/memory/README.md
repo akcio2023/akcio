@@ -9,12 +9,11 @@ The `MemoryStore` records chat history in database. It should have methods below
 - `add_history`: insert chat history to database, given a list of dictionaries with keys of 'question' and 'answer', [{'question': 'xxx', 'answer': 'xxx'}]
 - `get_history`: return chat history in a list of tuples, [('this is question', 'this is answer')]
 
-By default, it uses [Postgresql](https://www.postgresql.org/) to manage memory. You can modify [`config.py`](../../config.py) to configure it.
+By default, it allows any SQL database suppported by [SQLAlchemy 2.0](https://docs.sqlalchemy.org/en/20) to manage memory. You can modify [`config.py`](../../config.py) to configure your database.
 
 ## Customization
 
 To manage memory with some other database, you can import your own MemoryStore in [__init__.py](./__init__.py).
-For example, changing `.pg` to `.sqlite` in the init file will switch to sqlite.
 In the meantime, don't forget to modify [config.py](../../config.py) for a changed `memorydb_config`.
 You can follow instructions below to customize the module:
 

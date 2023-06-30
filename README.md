@@ -48,7 +48,10 @@ It also supports different integrations of LLM service and databases:
 |                         | Milvus       | ✓      | ✓     |
 | **Scalar Store (Optional)** | Elastic  | ✓      | ✓     |
 | **Memory Store**        | Postgresql   | ✓      | ✓     |
-|                         | SQLite       |        |       |
+|                         | MySQL and MariaDB     | ✓     |       |
+|                         | SQLite       | ✓      |       |
+|                         | Oracle       | ✓      |       |
+|                         | Microsoft SQL Server  | ✓     |       |
 
 ### Option 1: Towhee
 
@@ -62,7 +65,7 @@ The option using Towhee simplifies the process of building a system by providing
     - **Prompt:** a prompt operator prepares messages for LLM by assembling system message, chat history, and the user's query processed by template.
 
 - [Memory](./towhee_src/memory):
-    The memory storage stores chat history to support context in conversation. (available: [Postgresql](./towhee_src/memory/pg.py))
+    The memory storage stores chat history to support context in conversation. (available: [most SQL](./towhee_src/memory/sql.py))
 
 
 ### Option 2: LangChain
@@ -134,9 +137,11 @@ The option using LangChain employs the use of [Agent](https://python.langchain.c
 
     - Store
 
+        Before getting started, all database services used for store must be running and be configured with write and create access.
+
         - Vector Store: You need to prepare the service of vector database in advance. For example, you can refer to [Milvus Documents](https://milvus.io/docs) or [Zilliz Cloud](https://zilliz.com/doc/quick_start) to learn about how to start a Milvus service.
         - Scalar Store (Optional): This is optional, only work when `USE_SCALAR` is true in [configuration](config.py). If this is enabled (i.e. USE_SCALAR=True), the default scalar store will use [Elastic](https://www.elastic.co/). In this case, you need to prepare the Elasticsearch service in advance.
-        - Memory Store: You need to prepare the database for memory storage as well. By default, the memory store uses [Postgresql](https://www.postgresqltutorial.com) which much be running and be configured with a database and user and password with wriote and create access.
+        - Memory Store: You need to prepare the database for memory storage as well. By default, LangChain mode supports [Postgresql](https://www.postgresql.org/) and Towhee mode allows interaction with any database supported by [SQLAlchemy 2.0](https://docs.sqlalchemy.org/en/20/dialects/).
 
         The system will use default store configs.
         To set up your special connections for each database, you can also export environment variables instead of modifying the configuration file.
@@ -146,10 +151,11 @@ The option using LangChain employs the use of [Agent](https://python.langchain.c
         $ export MILVUS_URI=https://localhost:19530
         ```
 
-       For the Memory Store, set **PG_URI** to **postgresql://{user}:{password}@{host}/{database_name}**:
+       For the Memory Store, set **SQL_URI**:
         ```shell
-        $ export PG_URI=postgresql://postgres:postgres@localhost/chat_history
+        $ export SQL_URI={database_type}://{user}:{password}@{host}/{database_name}
         ```
+        > LangChain mode only supports [Postgresql](https://www.postgresql.org/) as database type.
 
 4. Start service
 
