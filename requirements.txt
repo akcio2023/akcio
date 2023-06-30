@@ -2,7 +2,8 @@ langchain==0.0.151
 unstructured
 pexpect
 pdf2image
-psycopg[binary,pool]
+SQLAlchemy>=2.0.15
+# psycopg2-binary
 openai
 gradio>=3.30.0
 fastapi
