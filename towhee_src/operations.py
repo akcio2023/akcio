@@ -30,7 +30,6 @@ def chat(session_id, project, question):
         memory_store.add_history(project, session_id, messages)
         return final_answer
     except Exception as e:
-        print(111, e)
         return 'Something went wrong. Please clear history and try again!'
 
 
