@@ -1,22 +1,22 @@
 import sys
 import os
 import json
-from typing import List
+from typing import List, Dict
 
 from sqlalchemy import create_engine, inspect, MetaData, Table, Column, String, Integer, JSON
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import memorydb_config
+from config import MEMORYDB_CONFIG
 from towhee_src.base import BaseMemory
 
         
 class MemoryStore(BaseMemory):
     '''Memory store using SQL databases supported by sqlalchemy. (eg. Postgresql)'''
-    def __init__(self):
+    def __init__(self, configs: Dict = MEMORYDB_CONFIG):
         '''Initialize memory storage'''
-        self.engine = create_engine(url=memorydb_config['connect_str'])
+        self.engine = create_engine(url=configs['connect_str'])
         self.meta = MetaData()
 
     def add_history(self, project: str, session_id: str, messages: List[dict]):

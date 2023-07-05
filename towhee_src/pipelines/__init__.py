@@ -1,5 +1,6 @@
 import sys
 import os
+from typing import Any, Dict
 
 from pymilvus import Collection, connections
 from towhee import AutoConfig, AutoPipes
@@ -10,16 +11,27 @@ from towhee_src.base import BasePipelines
 from towhee_src.pipelines.prompt import PROMPT_OP
 from config import (
     USE_SCALAR, LLM_OPTION,
-    textencoder_config, chat_configs,
-    vectordb_config, scalardb_config
+    TEXTENCODER_CONFIG, CHAT_CONFIG,
+    VECTORDB_CONFIG, SCALARDB_CONFIG
     )
 
 
 class TowheePipelines(BasePipelines):
-    def __init__(self, llm_src: str = LLM_OPTION):
-        self.prompt_op = PROMPT_OP
-        self.use_scalar = USE_SCALAR
+    def __init__(self, 
+                 llm_src: str = LLM_OPTION, 
+                 use_scalar: bool = USE_SCALAR, 
+                 prompt_op: Any = PROMPT_OP,
+                 chat_config: Dict = CHAT_CONFIG,
+                 textencoder_config: Dict = TEXTENCODER_CONFIG,
+                 vectordb_config: Dict = VECTORDB_CONFIG,
+                 scalardb_config: Dict = SCALARDB_CONFIG,
+                 ):
+        self.prompt_op = prompt_op
+        self.use_scalar = use_scalar
         self.llm_src = llm_src
+
+        self.chat_config = chat_config,
+        self.textencoder_config = textencoder_config
 
         self.milvus_uri = vectordb_config['connection_args']['uri']
         self.milvus_host = self.milvus_uri.split('https://')[1].split(':')[0]
@@ -67,11 +79,11 @@ class TowheePipelines(BasePipelines):
 
     @property
     def search_config(self):
-        search_config = AutoConfig.load_config('osschat-search', llm_src=self.llm_src, **chat_configs[self.llm_src])
+        search_config = AutoConfig.load_config('osschat-search', llm_src=self.llm_src, **self.chat_config[self.llm_src])
         
         # Configure embedding
-        search_config.embedding_model = textencoder_config['model']
-        search_config.embedding_normalize = textencoder_config['norm']      
+        search_config.embedding_model = self.textencoder_config['model']
+        search_config.embedding_normalize = self.textencoder_config['norm']      
         
         # Configure prompt
         if self.prompt_op:
@@ -102,8 +114,8 @@ class TowheePipelines(BasePipelines):
         insert_config = AutoConfig.load_config('osschat-insert')
 
         # Configure embedding
-        insert_config.embedding_model = textencoder_config['model']
-        insert_config.embedding_normalize = textencoder_config['norm']
+        insert_config.embedding_model = self.textencoder_config['model']
+        insert_config.embedding_normalize = self.textencoder_config['norm']
 
         # Configure vector store (Milvus/Zilliz)
         insert_config.milvus_host = self.milvus_host
@@ -130,7 +142,7 @@ class TowheePipelines(BasePipelines):
             FieldSchema(name='id', dtype=DataType.INT64, description='ids', is_primary=True, auto_id=True),
             FieldSchema(name='text_id', dtype=DataType.VARCHAR, description='text', max_length=500),
             FieldSchema(name='text', dtype=DataType.VARCHAR, description='text', max_length=1000),
-            FieldSchema(name='embedding', dtype=DataType.FLOAT_VECTOR, description='embedding vectors', dim=textencoder_config['dim'])
+            FieldSchema(name='embedding', dtype=DataType.FLOAT_VECTOR, description='embedding vectors', dim=self.textencoder_config['dim'])
             ]
         schema = CollectionSchema(fields=fields, description='osschat')
         collection = Collection(name=project, schema=schema)
