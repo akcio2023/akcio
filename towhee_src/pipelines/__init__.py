@@ -8,7 +8,7 @@ from towhee import AutoConfig, AutoPipes
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from towhee_src.base import BasePipelines
-from towhee_src.pipelines.prompt import PROMPT_OP
+from towhee_src.pipelines.prompts import PROMPT_OP
 from config import (
     USE_SCALAR, LLM_OPTION,
     TEXTENCODER_CONFIG, CHAT_CONFIG,
@@ -30,7 +30,7 @@ class TowheePipelines(BasePipelines):
         self.use_scalar = use_scalar
         self.llm_src = llm_src
 
-        self.chat_config = chat_config,
+        self.chat_config = chat_config
         self.textencoder_config = textencoder_config
 
         self.milvus_uri = vectordb_config['connection_args']['uri']
