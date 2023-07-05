@@ -9,16 +9,16 @@ from langchain.schema import BaseMessage, ChatResult, HumanMessage, AIMessage, S
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import chat_configs
+from config import CHAT_CONFIG
 
-chat_configs = chat_configs['ernie']
-llm_kwargs = chat_configs.get('llm_kwargs', {})
+CHAT_CONFIG = CHAT_CONFIG['ernie']
+llm_kwargs = CHAT_CONFIG.get('llm_kwargs', {})
 
 
 class ChatLLM(BaseChatModel):
     '''Chat with LLM given context. Must be a LangChain BaseLanguageModel to adapt agent.'''
-    api_key: str = chat_configs['ernie_api_key']
-    secret_key: str = chat_configs['ernie_secret_key']
+    api_key: str = CHAT_CONFIG['ernie_api_key']
+    secret_key: str = CHAT_CONFIG['ernie_secret_key']
     temperature: float = llm_kwargs.get('temperature', 0)
     max_tokens: Optional[int] = llm_kwargs.get('max_tokens', None)
     n: int = llm_kwargs.get('n', 1)

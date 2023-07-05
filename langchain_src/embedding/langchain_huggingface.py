@@ -8,10 +8,10 @@ from langchain.embeddings import HuggingFaceEmbeddings
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import textencoder_config
+from config import TEXTENCODER_CONFIG
 
-MODEL = textencoder_config.get('model', 'multi-qa-mpnet-base-cos-v1')
-NORM = textencoder_config.get('norm', False)
+MODEL = TEXTENCODER_CONFIG.get('model', 'multi-qa-mpnet-base-cos-v1')
+NORM = TEXTENCODER_CONFIG.get('norm', False)
 
 
 class TextEncoder(HuggingFaceEmbeddings):

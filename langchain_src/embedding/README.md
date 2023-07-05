@@ -18,7 +18,7 @@ Modify [embedding configs](../../config.py) to configure it, like changing model
 
 ```python
 # Text embedding
-textencoder_config = {
+TEXTENCODER_CONFIG = {
     'model': 'multi-qa-mpnet-base-cos-v1',
     'norm': True
 }

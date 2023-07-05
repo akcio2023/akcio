@@ -13,14 +13,14 @@ from langchain.chat_models import ChatOpenAI
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from config import questiongenerator_configs
+from config import QUESTIONGENERATOR_CONFIG
 
 
 class QuestionGenerator:
     '''Use LLM to generate potential questions given document.'''
-    temperature: float = questiongenerator_configs.get('temperature', 0.0)
-    openai_api_key: Optional[str] = questiongenerator_configs.get('openai_api_key', os.getenv('OPENAI_API_KEY'))
-    max_tokens: Optional[int] = questiongenerator_configs.get('max_tokens', None)
+    temperature: float = QUESTIONGENERATOR_CONFIG.get('temperature', 0.0)
+    openai_api_key: Optional[str] = QUESTIONGENERATOR_CONFIG.get('openai_api_key', os.getenv('OPENAI_API_KEY'))
+    max_tokens: Optional[int] = QUESTIONGENERATOR_CONFIG.get('max_tokens', None)
 
     chat: BaseChatModel = ChatOpenAI(temperature=temperature, openai_api_key=openai_api_key)
 

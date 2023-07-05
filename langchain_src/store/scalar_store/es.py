@@ -7,10 +7,10 @@ from langchain.retrievers import ElasticSearchBM25Retriever
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import scalardb_config
+from config import SCALARDB_CONFIG
 
 
-CONNECTION_ARGS = scalardb_config.get(
+CONNECTION_ARGS = SCALARDB_CONFIG.get(
     'connection_args', {'host': 'localhost', 'port': 9200})
 
 

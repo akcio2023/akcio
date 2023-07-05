@@ -10,16 +10,16 @@ from langchain.schema import BaseMessage, ChatResult, HumanMessage, AIMessage, C
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import chat_configs
+from config import CHAT_CONFIG
 
-chat_configs = chat_configs['dolly']
-llm_kwargs = chat_configs.get('llm_kwargs', {})
+CHAT_CONFIG = CHAT_CONFIG['dolly']
+llm_kwargs = CHAT_CONFIG.get('llm_kwargs', {})
 
 
 class ChatLLM(BaseChatModel):
     '''Chat with LLM given context. Must be a LangChain BaseLanguageModel to adapt agent.'''
 
-    model_name: str = chat_configs['dolly_model']
+    model_name: str = CHAT_CONFIG['dolly_model']
     device: str = llm_kwargs.get('device', 'auto')
 
     generate_text = pipeline(

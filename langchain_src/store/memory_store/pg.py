@@ -6,10 +6,10 @@ from langchain.memory import PostgresChatMessageHistory, ConversationBufferMemor
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import memorydb_config
+from config import MEMORYDB_CONFIG
 
 
-CONNECT_STR = memorydb_config.get(
+CONNECT_STR = MEMORYDB_CONFIG.get(
     'connect_str', 'postgresql://postgres:postgres@localhost/chat_history')
 
 

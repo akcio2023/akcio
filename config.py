@@ -2,7 +2,7 @@ import os
 
 ################## LLM ##################
 LLM_OPTION = os.getenv('LLM_OPTION', 'openai')  # select your LLM service
-chat_configs = {
+CHAT_CONFIG = {
     'openai': {
         'openai_model': 'gpt-3.5-turbo',
         'openai_api_key': None,  # will use environment  value 'OPENAI_API_KEY' if None
@@ -43,7 +43,7 @@ chat_configs = {
 
 
 ################## Embedding ##################
-textencoder_config = {
+TEXTENCODER_CONFIG = {
     'model': 'multi-qa-mpnet-base-cos-v1',
     'norm': True,
     'dim': 768
@@ -54,7 +54,7 @@ textencoder_config = {
 USE_SCALAR = os.getenv('USE_SCALAR', False)
 
 # Vector db configs
-vectordb_config = {
+VECTORDB_CONFIG = {
     'connection_args': {
         'uri': os.getenv('MILVUS_URI', 'https://localhost:19530'),
         'user': os.getenv('MILVUS_USER', ''),
@@ -71,7 +71,7 @@ vectordb_config = {
 }
 
 # Scalar db configs
-scalardb_config = {
+SCALARDB_CONFIG = {
     'connection_args': {
         'hosts': os.getenv('ES_HOSTS', 'https://localhost:9200'),
         'ca_certs': os.getenv('ES_CA_CERTS', None),
@@ -80,16 +80,16 @@ scalardb_config = {
 }
 
 # Memory db configs
-memorydb_config = {
+MEMORYDB_CONFIG = {
     'connect_str': os.getenv('SQL_URI', 'postgresql://postgres:postgres@localhost/chat_history')
 }
 
 ################## Data loader ##################
-dataparser_configs = {
+DATAPARSER_CONFIG = {
     'chunk_size': 300
 }
 
-questiongenerator_configs = {
+QUESTIONGENERATOR_CONFIG = {
     'model_name': 'gpt-3.5-turbo',
     'temperature': 0,
 }

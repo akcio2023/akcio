@@ -7,11 +7,11 @@ from langchain.embeddings import OpenAIEmbeddings
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import textencoder_config
+from config import TEXTENCODER_CONFIG
 
 
-MODEL = textencoder_config.get('model', 'text-embedding-ada-002')
-NORM = textencoder_config.get('norm', False)
+MODEL = TEXTENCODER_CONFIG.get('model', 'text-embedding-ada-002')
+NORM = TEXTENCODER_CONFIG.get('norm', False)
 
 
 class TextEncoder(OpenAIEmbeddings):

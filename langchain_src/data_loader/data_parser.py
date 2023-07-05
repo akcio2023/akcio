@@ -7,10 +7,10 @@ from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from config import dataparser_configs
+from config import DATAPARSER_CONFIG
 
 
-CHUNK_SIZE = dataparser_configs.get('chunk_size', 300)
+CHUNK_SIZE = DATAPARSER_CONFIG.get('chunk_size', 300)
 
 
 class DataParser:

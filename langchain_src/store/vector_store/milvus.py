@@ -9,15 +9,15 @@ from langchain.docstore.document import Document
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 
-from config import vectordb_config
+from config import VECTORDB_CONFIG
 
 
 logger = logging.getLogger('vector_store')
 
-CONNECTION_ARGS = vectordb_config.get('connection_args', {'host': 'localhost', 'port': 19530})
-TOP_K = vectordb_config.get('top_k', 3)
-INDEX_PARAMS = vectordb_config.get('index_params', None)
-SEARCH_PARAMS = vectordb_config.get('search_params', None)
+CONNECTION_ARGS = VECTORDB_CONFIG.get('connection_args', {'host': 'localhost', 'port': 19530})
+TOP_K = VECTORDB_CONFIG.get('top_k', 3)
+INDEX_PARAMS = VECTORDB_CONFIG.get('index_params', None)
+SEARCH_PARAMS = VECTORDB_CONFIG.get('search_params', None)
 
 
 class VectorStore(Milvus):
