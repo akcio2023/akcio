@@ -3,8 +3,6 @@ from unittest.mock import patch
 
 from towhee.runtime.data_queue import DataQueue, ColumnType
 
-# from milvus import default_server
-# from pymilvus import connections, utility
 import sys
 import os
 
