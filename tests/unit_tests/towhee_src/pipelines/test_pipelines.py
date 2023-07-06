@@ -120,6 +120,25 @@ class TestPipelines(unittest.TestCase):
             pipelines = create_pipelines('ernie')
             test_pipelines(pipelines)
 
+    def test_dashscope(self):
+        from http import HTTPStatus
+
+        class MockRequest:
+            @property
+            def status_code(self):
+                return HTTPStatus.OK
+            
+            @property
+            def output(self):
+                return {'text': MOCK_ANSWER}
+            
+        with patch('dashscope.Generation.call') as mock_llm:
+
+            mock_llm.return_value = MockRequest()
+
+            pipelines = create_pipelines('dashscope')
+            test_pipelines(pipelines)
+
     def test_minimax(self):
 
         class MockRequest:
@@ -146,6 +165,18 @@ class TestPipelines(unittest.TestCase):
             mock_llm.return_value = MockRequest()
 
             pipelines = create_pipelines('skychat')
+            test_pipelines(pipelines)
+
+    def test_dolly(self):
+        class MockDolly:
+            def __call__(self, *args, **kwargs):
+                return [{'generated_text': MOCK_ANSWER}]
+
+        with patch('transformers.pipeline') as mock_llm:
+
+            mock_llm.return_value = MockDolly()
+
+            pipelines = create_pipelines('dolly')
             test_pipelines(pipelines)
 
     @classmethod
