@@ -42,7 +42,7 @@ It also supports different integrations of LLM service and databases:
 |                         | MiniMax      | ✓      |       |
 |                         | ChatGLM      | ✓      |       |
 |                         | SkyChat      | ✓      |       |
-| **Embedding**           | OpenAI       |        | ✓     |
+| **Embedding**           | OpenAI       | ✓      | ✓     |
 |                         | HuggingFace  | ✓      | ✓     |
 | **Vector Store**        | Zilliz Cloud | ✓      | ✓     |
 |                         | Milvus       | ✓      | ✓     |
