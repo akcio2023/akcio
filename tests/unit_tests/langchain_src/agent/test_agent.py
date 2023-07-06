@@ -5,9 +5,9 @@ import unittest
 from langchain.agents import AgentExecutor, Tool
 from langchain.llms.fake import FakeListLLM
 
-from langchain_src.agent import ChatAgent
-
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../../..'))
+
+from langchain_src.agent import ChatAgent
 
 
 class TestChatAgent(unittest.TestCase):
@@ -26,10 +26,9 @@ class TestChatAgent(unittest.TestCase):
         agent_executor = AgentExecutor.from_agent_and_tools(
             agent=self.chat_agent,
             tools=self.tools,
-            verbose=True
+            verbose=False
         )
         final_answer = agent_executor.run(input='whats 2 + 2', chat_history=[])
-        print(final_answer)
         assert final_answer == self.responses[1]
 
 
