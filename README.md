@@ -52,6 +52,7 @@ It also supports different integrations of LLM service and databases:
 |                         | SQLite       | ✓      |       |
 |                         | Oracle       | ✓      |       |
 |                         | Microsoft SQL Server  | ✓     |       |
+| **Rerank**              | MS MARCO Cross-Encoders | ✓ | |
 
 ### Option 1: Towhee
 
