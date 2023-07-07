@@ -12,7 +12,8 @@ from towhee_src.pipelines.prompts import PROMPT_OP
 from config import (
     USE_SCALAR, LLM_OPTION,
     TEXTENCODER_CONFIG, CHAT_CONFIG,
-    VECTORDB_CONFIG, SCALARDB_CONFIG
+    VECTORDB_CONFIG, SCALARDB_CONFIG,
+    RERANK_CONFIG
     )
 
 
@@ -25,6 +26,7 @@ class TowheePipelines(BasePipelines):
                  textencoder_config: Dict = TEXTENCODER_CONFIG,
                  vectordb_config: Dict = VECTORDB_CONFIG,
                  scalardb_config: Dict = SCALARDB_CONFIG,
+                 rerank_config: Dict = RERANK_CONFIG
                  ):
         self.prompt_op = prompt_op
         self.use_scalar = use_scalar
@@ -32,6 +34,7 @@ class TowheePipelines(BasePipelines):
 
         self.chat_config = chat_config
         self.textencoder_config = textencoder_config
+        self.rerank_config = rerank_config
 
         self.milvus_uri = vectordb_config['connection_args']['uri']
         self.milvus_host = self.milvus_uri.split('https://')[1].split(':')[0]
@@ -79,7 +82,12 @@ class TowheePipelines(BasePipelines):
 
     @property
     def search_config(self):
-        search_config = AutoConfig.load_config('osschat-search', llm_src=self.llm_src, **self.chat_config[self.llm_src])
+        search_config = AutoConfig.load_config(
+            'osschat-search',
+            llm_src=self.llm_src,
+            **self.rerank_config,
+            **self.chat_config[self.llm_src]
+            )
         
         # Configure embedding
         search_config.embedding_model = self.textencoder_config['model']

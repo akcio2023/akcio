@@ -84,6 +84,14 @@ MEMORYDB_CONFIG = {
     'connect_str': os.getenv('SQL_URI', 'postgresql://postgres:postgres@localhost/chat_history')
 }
 
+
+############### Rerank configs ##################
+RERANK_CONFIG = {
+    'rerank': True,
+    'rerank_model': 'cross-encoder/ms-marco-MiniLM-L-12-v2',
+    'threshold': 0.6
+}
+
 ################## Data loader ##################
 DATAPARSER_CONFIG = {
     'chunk_size': 300

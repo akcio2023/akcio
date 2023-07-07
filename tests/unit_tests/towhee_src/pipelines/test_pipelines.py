@@ -44,6 +44,7 @@ def create_pipelines(llm_src):
         prompt_op=mock_prompt,
         textencoder_config=TEXTENCODER_CONFIG,
         vectordb_config=VECTORDB_CONFIG,
+        rerank_config=None
     )
     return pipelines
 
