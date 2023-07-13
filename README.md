@@ -1,3 +1,10 @@
+⚠️ **Important Notice**:
+
+This repository has been archived.
+Please visit [zilliztech/akcio](https://github.com/zilliztech/akcio) for updates after July 13, 2023.
+
+---
+
 # Akcio: Enhancing LLM-Powered ChatBot with CVP Stack
 
 [OSSChat](https://osschat.io) |
